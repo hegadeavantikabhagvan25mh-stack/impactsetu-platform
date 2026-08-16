@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ImpactSetu — AI-Powered NGO Discovery &amp; CSR Matching</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#161F38;
+    --navy-soft:#212B4A;
+    --teal:#0F9C8A;
+    --teal-deep:#0B7A6D;
+    --gold:#E8A33D;
+    --paper:#F6F4EE;
+    --paper-dim:#EDEAE1;
+    --ink:#1B2230;
+    --ink-soft:#57607A;
+    --line:#DAD5C7;
+    --white:#FFFFFF;
+    --sev-high:#D65A4A;
+    --sev-med:#E8A33D;
+    --sev-low:#3F9A6E;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:'Inter',sans-serif; font-size:16px; line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{ font-family:'Fraunces',serif; font-weight:600; letter-spacing:-0.01em; margin:0; }
+  a{color:inherit;}
+  .wrap{max-width:1180px; margin:0 auto; padding:0 28px;}
+
+  /* Skip link */
+  .skip-link{position:absolute; left:-999px; top:0; background:var(--navy); color:white; padding:10px 16px; z-index:100;}
+  .skip-link:focus{left:12px; top:12px;}
+
+  /* Header */
+  header{
+    position:sticky; top:0; z-index:20; background:rgba(246,244,238,0.92);
+    backdrop-filter:blur(8px); border-bottom:1px solid var(--line);
+  }
+  .nav{display:flex; align-items:center; justify-content:space-between; padding:18px 0;}
+  .wordmark{display:flex; align-items:center; gap:9px; font-family:'Fraunces',serif; font-weight:600; font-size:21px; color:var(--navy);}
+  .wordmark .dot{width:9px; height:9px; border-radius:50%; background:var(--teal); box-shadow:0 0 0 4px rgba(15,156,138,0.18);}
+  .mode-toggle{
+    display:flex; background:var(--paper-dim); border:1px solid var(--line); border-radius:999px; padding:4px; gap:2px;
+  }
+  .mode-toggle button{
+    border:none; background:transparent; padding:9px 18px; border-radius:999px; font-family:'Inter',sans-serif;
+    font-size:13.5px; font-weight:600; color:var(--ink-soft); cursor:pointer; transition:all .25s ease;
+    letter-spacing:.01em;
+  }
+  .mode-toggle button.active{ background:var(--navy); color:white; }
+  .mode-toggle button:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible{
+    outline:2px solid var(--teal); outline-offset:2px;
+  }
+
+  /* Hero */
+  .hero{ padding:76px 0 56px; }
+  .eyebrow{
+    font-size:12.5px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--teal-deep);
+    margin-bottom:16px; display:flex; align-items:center; gap:8px;
+  }
+  .eyebrow::before{ content:""; width:22px; height:1px; background:var(--teal-deep); }
+  .hero h1{ font-size:clamp(34px,5vw,54px); line-height:1.08; color:var(--navy); max-width:760px; transition:opacity .3s ease;}
+  .hero p.lede{ font-size:18px; color:var(--ink-soft); max-width:560px; margin-top:20px; transition:opacity .3s ease;}
+  .hero-cta{ margin-top:30px; display:flex; gap:14px; flex-wrap:wrap; }
+  .btn{
+    font-family:'Inter',sans-serif; font-weight:600; font-size:14.5px; padding:13px 24px; border-radius:8px;
+    border:1px solid transparent; cursor:pointer; transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn-primary{ background:var(--navy); color:white; }
+  .btn-primary:hover{ transform:translateY(-1px); box-shadow:0 6px 16px rgba(22,31,56,0.25); }
+  .btn-ghost{ background:transparent; color:var(--navy); border-color:var(--line); }
+  .btn-ghost:hover{ border-color:var(--navy); }
+
+  /* Section shell */
+  section.panel{ padding:10px 0 70px; }
+  .panel-head{ display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:28px; flex-wrap:wrap; gap:14px;}
+  .panel-head h2{ font-size:26px; color:var(--navy); }
+  .panel-head .sub{ color:var(--ink-soft); font-size:14.5px; max-width:420px; }
+  select{
+    font-family:'Inter',sans-serif; font-size:13.5px; font-weight:600; color:var(--navy); background:white;
+    border:1px solid var(--line); border-radius:8px; padding:10px 14px; cursor:pointer;
+  }
+  .search-input{
+    font-family:'Inter',sans-serif; font-size:13.5px; color:var(--ink); background:white;
+    border:1px solid var(--line); border-radius:8px; padding:10px 14px; min-width:240px; flex:1; max-width:340px;
+  }
+  .search-input::placeholder{ color:#9AA3B5; }
+  .search-input:focus-visible{ outline:2px solid var(--teal); outline-offset:1px; }
+
+  /* Need-Gap Pulse — signature element (donor mode) */
+  .pulse-list{ display:flex; flex-direction:column; gap:1px; background:var(--line); border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+  .pulse-row{
+    display:grid; grid-template-columns:22px 1.3fr 1.3fr 110px 100px; align-items:center; gap:18px;
+    background:white; padding:16px 20px; transition:background .2s ease;
+  }
+  .pulse-stat{ line-height:1.5; }
+  .pulse-row:hover{ background:#FBFAF6; }
+  .pulse-dot{ width:10px; height:10px; border-radius:50%; position:relative; }
+  .pulse-dot::after{
+    content:""; position:absolute; inset:-6px; border-radius:50%; opacity:.35;
+    animation:pulse 1.8s ease-out infinite;
+  }
+  .pulse-dot.high{ background:var(--sev-high);} .pulse-dot.high::after{background:var(--sev-high);}
+  .pulse-dot.med{ background:var(--sev-med);} .pulse-dot.med::after{background:var(--sev-med);}
+  .pulse-dot.low{ background:var(--sev-low);} .pulse-dot.low::after{background:var(--sev-low);}
+  @keyframes pulse{ 0%{transform:scale(.6); opacity:.5;} 100%{transform:scale(2.1); opacity:0;} }
+  .pulse-region{ font-weight:600; color:var(--navy); font-size:15px; }
+  .pulse-region .cause{ display:block; font-weight:400; color:var(--ink-soft); font-size:13px; margin-top:2px; }
+  .pulse-stat{ font-size:13px; color:var(--ink-soft); }
+  .sev-tag{ font-size:11.5px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; padding:5px 10px; border-radius:999px; text-align:center; white-space:nowrap; justify-self:start; }
+  .sev-tag.high{ background:#FBEAE7; color:var(--sev-high); }
+  .sev-tag.med{ background:#FCF2E0; color:#B87B1E; }
+  .sev-tag.low{ background:#E7F4EC; color:var(--sev-low); }
+  .pulse-action{ font-size:13px; font-weight:600; color:var(--teal-deep); text-decoration:none; justify-self:end;}
+  .pulse-action:hover{ text-decoration:underline; }
+
+  @media (max-width:720px){
+    .pulse-row{ grid-template-columns:16px 1fr; grid-template-areas:"dot region" ". stat" ". sev" ". action"; row-gap:6px; }
+    .pulse-stat, .sev-tag, .pulse-action{ justify-self:start; }
+  }
+
+  /* Cards (NGO mode) */
+  .grid-3{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+  @media (max-width:900px){ .grid-3{ grid-template-columns:1fr; } }
+  .match-card{ background:white; border:1px solid var(--line); border-radius:12px; padding:22px; display:flex; flex-direction:column; gap:12px; position:relative;}
+  .real-badge{
+    position:absolute; top:16px; right:16px; font-size:10px; font-weight:700; letter-spacing:.04em;
+    background:var(--teal-deep); color:white; padding:3px 9px; border-radius:999px;
+  }
+  .match-card .org{ font-family:'Fraunces',serif; font-size:18px; color:var(--navy); font-weight:600;}
+  .match-card .tag-row{ display:flex; gap:8px; flex-wrap:wrap; }
+  .chip{ font-size:11.5px; font-weight:600; background:var(--paper-dim); color:var(--ink-soft); padding:4px 10px; border-radius:999px; }
+  .match-card .amount{ font-size:14px; color:var(--ink-soft); }
+  .match-card .amount b{ color:var(--navy); font-size:17px; }
+  .fit-bar{ height:6px; border-radius:999px; background:var(--paper-dim); overflow:hidden; }
+  .fit-fill{ height:100%; background:linear-gradient(90deg,var(--teal),var(--teal-deep)); }
+  .fit-label{ font-size:12px; color:var(--teal-deep); font-weight:700; }
+
+  .ngo-filter-row{ display:flex; gap:12px; align-items:center; margin-bottom:22px; flex-wrap:wrap; }
+  .data-note{ font-size:11.5px; color:var(--ink-soft); margin-top:14px; }
+  .sample-flag{
+    font-size:10px; font-weight:700; letter-spacing:.05em; background:#FCF2E0; color:#B87B1E;
+    padding:3px 9px; border-radius:999px; vertical-align:middle; margin-left:8px;
+  }
+  .govt-tag{
+    font-size:9.5px; font-weight:700; letter-spacing:.04em; color:var(--teal-deep); background:#E7F4F1;
+    padding:2px 7px; border-radius:5px; margin-left:8px;
+  }
+
+  /* How it works strip */
+  .how{ background:var(--navy); color:white; padding:60px 0; margin-top:10px; }
+  .how h2{ color:white; font-size:24px; margin-bottom:34px; }
+  .how-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:26px; }
+  @media (max-width:900px){ .how-grid{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:560px){ .how-grid{ grid-template-columns:1fr; } }
+  .how-step .n{ font-family:'Fraunces',serif; font-size:15px; color:var(--teal); margin-bottom:10px; font-weight:600;}
+  .how-step h3{ font-size:16px; color:white; margin-bottom:8px; }
+  .how-step p{ font-size:13.5px; color:#B9C0D4; margin:0; line-height:1.55; }
+
+  footer{ padding:34px 0; border-top:1px solid var(--line); }
+  footer .foot-row{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
+  footer p{ margin:0; font-size:12.5px; color:var(--ink-soft); }
+
+  .hidden{ display:none !important; }
+  .fade{ animation:fadeIn .35s ease; }
+  @keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+  @media (prefers-reduced-motion: reduce){
+    .pulse-dot::after{ animation:none; }
+    *{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
+  }
+</style>
+</head>
+<body data-mode="donor">
+<a href="#main" class="skip-link">Skip to content</a>
+
+<header>
+  <div class="wrap nav">
+    <div class="wordmark"><span class="dot"></span> ImpactSetu</div>
+    <div class="mode-toggle" role="group" aria-label="Switch view">
+      <button id="btn-donor" class="active" onclick="setMode('donor')">For CSR &amp; Donors</button>
+      <button id="btn-ngo" onclick="setMode('ngo')">For NGOs</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero wrap">
+    <div class="eyebrow" id="eyebrow">Live need-gap intelligence</div>
+    <h1 id="hero-title">See where the real need is — before you decide where to give.</h1>
+    <p class="lede" id="hero-lede">ImpactSetu reads public need-data across districts and matches it to verified NGOs already working there, so your CSR budget reaches credible organisations beyond the usual well-known names.</p>
+    <div class="hero-cta">
+      <button class="btn btn-primary" id="hero-cta-primary" onclick="document.getElementById('panel-section').scrollIntoView()">Explore the need-gap map</button>
+      <button class="btn btn-ghost" onclick="alert('This is a prototype for the MPB ideation phase — sign-up flow not yet built.')">Request early access</button>
+    </div>
+  </section>
+
+  <!-- DONOR VIEW -->
+  <section class="panel wrap" id="panel-section" data-view="donor">
+    <div class="panel-head">
+      <div>
+        <h2>Need-Gap Pulse</h2>
+        <p class="sub">Child nutrition indicators are real NFHS-5 (2019-21) government data, Ministry of Health &amp; Family Welfare, Govt. of India — district child-stunting &amp; sanitation-access rates. Severity bands (High/Medium/Low) are our own simple threshold on the stunting rate, not an official tier.</p>
+      </div>
+      <select id="sev-filter" onchange="renderPulse()" aria-label="Filter by severity">
+        <option value="all">All severities</option>
+        <option value="high">High need</option>
+        <option value="medium">Medium need</option>
+        <option value="low">Low need</option>
+      </select>
+    </div>
+    <div class="ngo-filter-row">
+      <input type="text" id="pulse-search" placeholder="Search by district or cause…" oninput="renderPulse()" aria-label="Search need-gap districts" class="search-input">
+    </div>
+    <div class="pulse-list" id="pulse-list"></div>
+    <p class="data-note">Source: NFHS-5 District Fact Sheets, Ministry of Health &amp; Family Welfare, Government of India (rchiips.org/nfhs). NGO counts and matching on the right are illustrative — see "For NGOs" view.</p>
+
+    <div class="panel-head" style="margin-top:52px;">
+      <div>
+        <h2>Verified NGOs <span class="sample-flag" style="background:#E7F4F1; color:var(--teal-deep);">1 REAL · REST SAMPLE</span></h2>
+        <p class="sub">Jivika Foundation is a real, active NGO. The remaining entries are illustrative placeholders standing in for what a full verified directory would look like.</p>
+      </div>
+    </div>
+    <div class="ngo-filter-row">
+      <input type="text" id="ngo-dir-search" placeholder="Search NGOs by name, cause or district…" oninput="renderNgoDirectory()" aria-label="Search verified NGOs" class="search-input">
+    </div>
+    <div class="grid-3" id="ngo-directory"></div>
+  </section>
+
+  <!-- NGO VIEW -->
+  <section class="panel wrap hidden" data-view="ngo">
+    <div class="panel-head">
+      <div>
+        <h2>Matched Opportunities <span class="sample-flag">SAMPLE DATA</span></h2>
+        <p class="sub">Illustrative example only — company names, grant sizes and match scores below are fictional placeholders, not a real CSR database. Shown to demonstrate how matching would work once built.</p>
+      </div>
+    </div>
+    <div class="ngo-filter-row">
+      <input type="text" id="ngo-search" placeholder="Search by company or cause…" oninput="renderMatches()" aria-label="Search matched opportunities" class="search-input">
+      <select id="focus-filter" onchange="renderMatches()" aria-label="Filter by region">
+        <option value="all">All regions</option>
+      </select>
+    </div>
+    <div class="grid-3" id="match-grid"></div>
+  </section>
+
+  <section class="how">
+    <div class="wrap">
+      <h2>How the matching actually works</h2>
+      <div class="how-grid">
+        <div class="how-step"><div class="n">01</div><h3>Read public data</h3><p>Census, NFHS and district-level indicators are combined into a live map of underserved needs.</p></div>
+        <div class="how-step"><div class="n">02</div><h3>Verify NGOs</h3><p>Registration (12A / 80G / CSR-1) and track record are checked before an NGO is listed.</p></div>
+        <div class="how-step"><div class="n">03</div><h3>Match by fit</h3><p>Cause area, geography and credibility are scored to rank the strongest matches on both sides.</p></div>
+        <div class="how-step"><div class="n">04</div><h3>Feed the loop</h3><p>Funded NGOs report outcomes back, sharpening the need-map for everyone who comes after.</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot-row">
+    <p>ImpactSetu — MPB Prototype · ICFAI Business School, Hyderabad</p>
+    <p>Prototype data is illustrative, not live.</p>
+  </div>
+</footer>
+
+<script>
+  // REAL DATA: Children under 5 stunted (%) and households with improved sanitation (%)
+  // Source: NFHS-5 (2019-21), Ministry of Health & Family Welfare, Government of India
+  // Severity tiering below is our own simple threshold on the real stunting rate (not an official govt tier):
+  // >=35% stunted = high, 25-34.9% = medium, <25% = low
+  const gaps = [
+    { region:"Adilabad", cause:"Child Nutrition", stunting:45.7, sanitation:50.8, severity:"high" },
+    { region:"Mahabubnagar", cause:"Child Nutrition", stunting:42.6, sanitation:73.7, severity:"high" },
+    { region:"Warangal Rural", cause:"Child Nutrition", stunting:36.1, sanitation:74.3, severity:"high" },
+    { region:"Nalgonda", cause:"Child Nutrition", stunting:31.7, sanitation:76.4, severity:"medium" },
+    { region:"Nizamabad", cause:"Child Nutrition", stunting:30.5, sanitation:72.5, severity:"medium" },
+    { region:"Karimnagar", cause:"Child Nutrition", stunting:30.3, sanitation:78.8, severity:"medium" },
+    { region:"Warangal Urban", cause:"Child Nutrition", stunting:29.5, sanitation:81.2, severity:"medium" },
+    { region:"Khammam", cause:"Child Nutrition", stunting:22.2, sanitation:84.5, severity:"low" },
+  ];
+
+  // SAMPLE / FICTIONAL — no real CSR or NGO database exists yet. Company names, grant
+  // amounts and fit-scores below are illustrative placeholders for the prototype only.
+  const matches = [
+    { org:"Horizon Industries CSR", cause:"Child Nutrition", region:"Adilabad", amount:"₹8–15 L", fit:92 },
+    { org:"Meridian Foundation", cause:"Child Nutrition", region:"Mahabubnagar", amount:"₹5–10 L", fit:87 },
+    { org:"TechNova Giving Fund", cause:"Child Nutrition", region:"Warangal Rural", amount:"₹12–20 L", fit:81 },
+    { org:"Bluewell CSR Trust", cause:"Child Nutrition", region:"Nalgonda", amount:"₹6–9 L", fit:78 },
+    { org:"Anchor Steel CSR Cell", cause:"Child Nutrition", region:"Nizamabad", amount:"₹10–18 L", fit:74 },
+    { org:"Sundial Foundation", cause:"Child Nutrition", region:"Khammam", amount:"₹4–7 L", fit:69 },
+  ];
+
+  // NGO directory — Jivika Foundation is real; the rest are illustrative placeholders.
+  const ngoDirectory = [
+    { org:"Jivika Foundation", cause:"Health & TB Awareness", region:"Hyderabad, Telangana", desc:"Runs health-focused CSR partnerships and community TB-awareness campaigns.", real:true },
+    { org:"Prakruti Welfare Trust", cause:"Child Nutrition", region:"Adilabad", desc:"Sample entry — placeholder for a verified nutrition-focused NGO.", real:false },
+    { org:"Asha Rural Development Society", cause:"Child Nutrition", region:"Mahabubnagar", desc:"Sample entry — placeholder for a verified NGO in this district.", real:false },
+    { org:"Bhoomi Foundation", cause:"Child Nutrition", region:"Warangal Rural", desc:"Sample entry — placeholder for a verified NGO in this district.", real:false },
+  ];
+
+  function renderNgoDirectory(){
+    const grid = document.getElementById('ngo-directory');
+    if(!grid) return;
+    const query = document.getElementById('ngo-dir-search').value.trim().toLowerCase();
+    grid.innerHTML = "";
+    const filtered = ngoDirectory.filter(n => {
+      return !query || n.org.toLowerCase().includes(query) || n.cause.toLowerCase().includes(query) || n.region.toLowerCase().includes(query);
+    });
+    if(filtered.length === 0){
+      grid.innerHTML = `<p style="color:var(--ink-soft); font-size:13.5px;">No NGOs found — try a different search.</p>`;
+      return;
+    }
+    filtered.forEach(n=>{
+      const card = document.createElement('div');
+      card.className = "match-card fade";
+      card.innerHTML = `
+        ${n.real ? '<span class="real-badge">REAL NGO</span>' : ''}
+        <div class="org">${n.org}</div>
+        <div class="tag-row"><span class="chip">${n.cause}</span><span class="chip">${n.region}</span></div>
+        <div class="amount">${n.desc}</div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  function sevLabel(s){ return s === "high" ? "High" : s === "medium" ? "Medium" : "Low"; }
+
+  function populateFilters(){
+    const focusSel = document.getElementById('focus-filter');
+    [...new Set(matches.map(m=>m.region))].forEach(r=>{
+      const o = document.createElement('option'); o.value=r; o.textContent=r; focusSel.appendChild(o);
+    });
+  }
+
+  function renderPulse(){
+    const filter = document.getElementById('sev-filter').value;
+    const query = document.getElementById('pulse-search').value.trim().toLowerCase();
+    const list = document.getElementById('pulse-list');
+    list.innerHTML = "";
+    const filtered = gaps.filter(g => {
+      const matchesSev = filter==="all" || g.severity===filter;
+      const matchesQuery = !query || g.region.toLowerCase().includes(query) || g.cause.toLowerCase().includes(query);
+      return matchesSev && matchesQuery;
+    });
+    if(filtered.length === 0){
+      list.innerHTML = `<div class="pulse-row"><p style="color:var(--ink-soft); font-size:13.5px; grid-column:1/-1;">No districts found — try a different search or severity.</p></div>`;
+      return;
+    }
+    filtered.forEach(g=>{
+      const row = document.createElement('div');
+      row.className = "pulse-row fade";
+      row.innerHTML = `
+        <span class="pulse-dot ${g.severity}"></span>
+        <span class="pulse-region">${g.region}<span class="cause">${g.cause}</span></span>
+        <span class="pulse-stat">${g.stunting}% U5 stunted <span class="govt-tag">NFHS-5</span><br>${g.sanitation}% households, improved sanitation</span>
+        <span class="sev-tag ${g.severity}">${sevLabel(g.severity)} need</span>
+        <a class="pulse-action" href="#" onclick="event.preventDefault(); setMode('ngo'); document.getElementById('focus-filter').value='${g.region}'; renderMatches();">See NGOs →</a>
+      `;
+      list.appendChild(row);
+    });
+  }
+
+  function renderMatches(){
+    const filter = document.getElementById('focus-filter').value;
+    const query = document.getElementById('ngo-search').value.trim().toLowerCase();
+    const grid = document.getElementById('match-grid');
+    grid.innerHTML = "";
+    const filtered = matches.filter(m => {
+      const matchesRegion = filter==="all" || m.region===filter;
+      const matchesQuery = !query || m.org.toLowerCase().includes(query) || m.cause.toLowerCase().includes(query) || m.region.toLowerCase().includes(query);
+      return matchesRegion && matchesQuery;
+    });
+    if(filtered.length === 0){
+      grid.innerHTML = `<p style="color:var(--ink-soft); font-size:13.5px;">No sample matches found — try a different search or region.</p>`;
+      return;
+    }
+    filtered.forEach(m=>{
+      const card = document.createElement('div');
+      card.className = "match-card fade";
+      card.innerHTML = `
+        <div class="org">${m.org}</div>
+        <div class="tag-row"><span class="chip">${m.cause}</span><span class="chip">${m.region}</span></div>
+        <div class="amount">Typical grant: <b>${m.amount}</b></div>
+        <div>
+          <div class="fit-bar"><div class="fit-fill" style="width:${m.fit}%"></div></div>
+          <div class="fit-label" style="margin-top:6px;">${m.fit}% match to your profile</div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  function setMode(mode){
+    document.body.dataset.mode = mode;
+    document.getElementById('btn-donor').classList.toggle('active', mode==='donor');
+    document.getElementById('btn-ngo').classList.toggle('active', mode==='ngo');
+    document.querySelectorAll('[data-view]').forEach(el=>{
+      el.classList.toggle('hidden', el.dataset.view !== mode);
+    });
+    const eyebrow = document.getElementById('eyebrow');
+    const title = document.getElementById('hero-title');
+    const lede = document.getElementById('hero-lede');
+    const cta = document.getElementById('hero-cta-primary');
+    if(mode==='donor'){
+      eyebrow.textContent = "Live need-gap intelligence";
+      title.textContent = "See where the real need is — before you decide where to give.";
+      lede.textContent = "ImpactSetu reads public need-data across districts and matches it to verified NGOs already working there, so your CSR budget reaches credible organisations beyond the usual well-known names.";
+      cta.textContent = "Explore the need-gap map";
+    } else {
+      eyebrow.textContent = "Get discovered by real funders";
+      title.textContent = "Stop chasing donors blind. Let the right ones find you.";
+      lede.textContent = "ImpactSetu shows CSR heads and foundations actively looking to fund causes like yours — so visibility depends on your work, not just who you already know.";
+      cta.textContent = "See matched opportunities";
+    }
+    [title, lede].forEach(el=>{ el.classList.remove('fade'); void el.offsetWidth; el.classList.add('fade'); });
+  }
+
+  populateFilters();
+  renderPulse();
+  renderMatches();
+  renderNgoDirectory();
+</script>
+</body>
+</html>
