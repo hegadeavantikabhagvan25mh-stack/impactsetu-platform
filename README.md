@@ -1,4 +1,5 @@
-# ImpactSetu — AI-Powered NGO Discovery & CSR Matching Platform
+# ImpactSetu 
+AI-Powered NGO Discovery & CSR Matching Platform
 
 **Status:** Ideation-phase prototype (MPB / MDT, IBS Hyderabad)
 
