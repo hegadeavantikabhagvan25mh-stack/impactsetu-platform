@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ImpactSetu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#161F38;
+    --navy-soft:#212B4A;
+    --teal:#0F9C8A;
+    --teal-deep:#0B7A6D;
+    --gold:#E8A33D;
+    --paper:#F6F4EE;
+    --paper-dim:#EDEAE1;
+    --ink:#1B2230;
+    --ink-soft:#57607A;
+    --line:#DAD5C7;
+    --white:#FFFFFF;
+    --sev-high:#D65A4A;
+    --sev-med:#E8A33D;
+    --sev-low:#3F9A6E;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:'Inter',sans-serif; font-size:16px; line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{ font-family:'Fraunces',serif; font-weight:600; letter-spacing:-0.01em; margin:0; }
+  a{color:inherit;}
+  .wrap{max-width:1180px; margin:0 auto; padding:0 28px;}
+
+  /* Skip link */
+  .skip-link{position:absolute; left:-999px; top:0; background:var(--navy); color:white; padding:10px 16px; z-index:100;}
+  .skip-link:focus{left:12px; top:12px;}
+
+  /* Header */
+  header{
+    position:sticky; top:0; z-index:20; background:rgba(246,244,238,0.92);
+    backdrop-filter:blur(8px); border-bottom:1px solid var(--line);
+  }
+  .nav{display:flex; align-items:center; justify-content:space-between; padding:18px 0;}
+  .wordmark{display:flex; align-items:center; gap:9px; font-family:'Fraunces',serif; font-weight:600; font-size:21px; color:var(--navy);}
+  .wordmark .dot{width:9px; height:9px; border-radius:50%; background:var(--teal); box-shadow:0 0 0 4px rgba(15,156,138,0.18);}
+  .wordmark-tagline{ margin:2px 0 0 18px; font-size:11.5px; font-style:italic; color:var(--ink-soft); font-family:'Inter',sans-serif; }
+  .mode-toggle{
+    display:flex; background:var(--paper-dim); border:1px solid var(--line); border-radius:999px; padding:4px; gap:2px;
+  }
+  .mode-toggle button{
+    border:none; background:transparent; padding:9px 18px; border-radius:999px; font-family:'Inter',sans-serif;
+    font-size:13.5px; font-weight:600; color:var(--ink-soft); cursor:pointer; transition:all .25s ease;
+    letter-spacing:.01em;
+  }
+  .mode-toggle button.active{ background:var(--navy); color:white; }
+  .mode-toggle button:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible{
+    outline:2px solid var(--teal); outline-offset:2px;
+  }
+
+  /* Hero */
+  .hero{ padding:44px 0 40px; }
+  .hero-centered{ text-align:center; display:flex; flex-direction:column; align-items:center; }
+  .hero-centered .lede{ max-width:600px; }
+  .hero-centered .soul-line{ max-width:600px; }
+  .hero-centered .hero-cta{ justify-content:center; }
+  .hero-centered .hero-stats{ justify-content:center; }
+  .hero-grid{ display:grid; grid-template-columns:1.05fr 0.95fr; gap:40px; align-items:center; }
+  @media (max-width:880px){ .hero-grid{ grid-template-columns:1fr; } .hero-visual{ order:-1; max-width:320px; margin:0 auto;} }
+  .hero-visual svg{ width:100%; height:auto; }
+  .hero-visual-caption{ font-size:11.5px; color:var(--ink-soft); font-style:italic; text-align:center; margin-top:10px; }
+
+  /* Rolling photo carousel */
+  .hero-carousel-wrap{ position:relative; width:100%; height:400px; overflow:hidden; background:var(--navy); }
+  @media (max-width:640px){ .hero-carousel-wrap{ height:260px; } }
+  .carousel-slide{
+    position:absolute; inset:0; background-size:cover; background-position:center;
+    opacity:0; transition:opacity 1.2s ease;
+  }
+  .carousel-slide.active{ opacity:1; }
+  .carousel-slide::after{
+    content:""; position:absolute; inset:0;
+    background:linear-gradient(180deg, rgba(22,31,56,0) 35%, rgba(22,31,56,0.82) 100%);
+  }
+  .carousel-caption{
+    position:absolute; left:28px; right:28px; bottom:26px; color:white; font-family:'Inter',sans-serif;
+    font-size:15px; font-weight:600; max-width:640px; z-index:2; line-height:1.4;
+    text-shadow:0 2px 10px rgba(0,0,0,0.35);
+  }
+  .carousel-dots{ position:absolute; bottom:24px; right:28px; display:flex; gap:8px; z-index:3; }
+  .carousel-dots button{
+    width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.5); border:none;
+    cursor:pointer; padding:0; transition:all .25s ease;
+  }
+  .carousel-dots button.active{ background:white; width:22px; border-radius:4px; }
+
+  /* Mode explainer */
+  .mode-explainer{
+    margin-top:36px; padding:16px 22px; background:var(--paper-dim); border-radius:10px;
+    display:flex; gap:28px; flex-wrap:wrap; justify-content:center; max-width:720px;
+  }
+  .mode-explainer p{ margin:0; font-size:12.5px; color:var(--ink-soft); max-width:300px; text-align:left; }
+  .mode-explainer b{ color:var(--navy); }
+
+  /* SDG band */
+  .sdg-band{ background:white; border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:22px 0; }
+  .sdg-label{ font-size:11.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 14px 0; text-align:center; }
+  .sdg-row{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+  .sdg-chip{
+    display:flex; align-items:center; gap:8px; color:white; font-size:12.5px; font-weight:600;
+    padding:8px 14px 8px 8px; border-radius:999px;
+  }
+  .sdg-chip span{
+    background:rgba(255,255,255,0.25); width:22px; height:22px; border-radius:50%; display:flex;
+    align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0;
+  }
+
+  .hero-stats{ display:flex; gap:32px; margin-top:34px; padding-top:24px; border-top:1px solid var(--line); flex-wrap:wrap; }
+  .hero-stats div{ display:flex; flex-direction:column; }
+  .hero-stats b{ font-family:'Fraunces',serif; font-size:26px; color:var(--navy); font-weight:600; }
+  .hero-stats span{ font-size:12px; color:var(--ink-soft); margin-top:2px; }
+  .eyebrow{
+    font-size:12.5px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--teal-deep);
+    margin-bottom:16px; display:flex; align-items:center; gap:8px;
+  }
+  .eyebrow::before{ content:""; width:22px; height:1px; background:var(--teal-deep); }
+  .hero h1{ font-size:clamp(40px,6vw,64px); line-height:1.02; color:var(--navy); max-width:760px; transition:opacity .3s ease;}
+  .hero p.soul-line{ font-family:'Fraunces',serif; font-style:italic; font-weight:500; font-size:19px; color:var(--teal-deep); max-width:520px; margin-top:14px; line-height:1.45; transition:opacity .3s ease;}
+  .hero p.lede{ font-size:15.5px; color:var(--ink-soft); max-width:560px; margin-top:16px; transition:opacity .3s ease;}
+  .hero-cta{ margin-top:30px; display:flex; gap:14px; flex-wrap:wrap; }
+  .btn{
+    font-family:'Inter',sans-serif; font-weight:600; font-size:14.5px; padding:13px 24px; border-radius:8px;
+    border:1px solid transparent; cursor:pointer; transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn-primary{ background:var(--navy); color:white; }
+  .btn-primary:hover{ transform:translateY(-1px); box-shadow:0 6px 16px rgba(22,31,56,0.25); }
+  .btn-ghost{ background:transparent; color:var(--navy); border-color:var(--line); }
+  .btn-ghost:hover{ border-color:var(--navy); }
+
+  /* Section shell */
+  section.panel{ padding:10px 0 70px; }
+  .panel-head{ display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:28px; flex-wrap:wrap; gap:14px;}
+  .panel-head h2{ font-size:26px; color:var(--navy); }
+  .panel-head .sub{ color:var(--ink-soft); font-size:14.5px; max-width:420px; }
+  select{
+    font-family:'Inter',sans-serif; font-size:13.5px; font-weight:600; color:var(--navy); background:white;
+    border:1px solid var(--line); border-radius:8px; padding:10px 14px; cursor:pointer;
+  }
+  .search-input{
+    font-family:'Inter',sans-serif; font-size:13.5px; color:var(--ink); background:white;
+    border:1px solid var(--line); border-radius:8px; padding:10px 14px; min-width:240px; flex:1; max-width:340px;
+  }
+  .search-input::placeholder{ color:#9AA3B5; }
+  .search-input:focus-visible{ outline:2px solid var(--teal); outline-offset:1px; }
+
+  /* Need-Gap Pulse — signature element (donor mode) */
+  .pulse-list{ display:flex; flex-direction:column; gap:1px; background:var(--line); border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+  .pulse-row{
+    display:grid; grid-template-columns:22px 1.3fr 1.3fr 110px 100px; align-items:center; gap:18px;
+    background:white; padding:16px 20px; transition:background .2s ease;
+  }
+  .pulse-stat{ line-height:1.5; }
+  .pulse-row:hover{ background:#FBFAF6; }
+  .pulse-dot{ width:10px; height:10px; border-radius:50%; position:relative; }
+  .pulse-dot::after{
+    content:""; position:absolute; inset:-6px; border-radius:50%; opacity:.35;
+    animation:pulse 1.8s ease-out infinite;
+  }
+  .pulse-dot.high{ background:var(--sev-high);} .pulse-dot.high::after{background:var(--sev-high);}
+  .pulse-dot.med{ background:var(--sev-med);} .pulse-dot.med::after{background:var(--sev-med);}
+  .pulse-dot.low{ background:var(--sev-low);} .pulse-dot.low::after{background:var(--sev-low);}
+  @keyframes pulse{ 0%{transform:scale(.6); opacity:.5;} 100%{transform:scale(2.1); opacity:0;} }
+  .pulse-region{ font-weight:600; color:var(--navy); font-size:15px; }
+  .pulse-region .cause{ display:block; font-weight:400; color:var(--ink-soft); font-size:13px; margin-top:2px; }
+  .state-chip{
+    font-size:9.5px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; background:var(--paper-dim);
+    color:var(--ink-soft); padding:2px 7px; border-radius:5px; margin-left:4px; vertical-align:middle;
+  }
+  .pulse-stat{ font-size:13px; color:var(--ink-soft); }
+  .sev-tag{ font-size:11.5px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; padding:5px 10px; border-radius:999px; text-align:center; white-space:nowrap; justify-self:start; }
+  .sev-tag.high{ background:#FBEAE7; color:var(--sev-high); }
+  .sev-tag.med{ background:#FCF2E0; color:#B87B1E; }
+  .sev-tag.low{ background:#E7F4EC; color:var(--sev-low); }
+  .pulse-action{ font-size:13px; font-weight:600; color:var(--teal-deep); text-decoration:none; justify-self:end;}
+  .pulse-action:hover{ text-decoration:underline; }
+
+  @media (max-width:720px){
+    .pulse-row{ grid-template-columns:16px 1fr; grid-template-areas:"dot region" ". stat" ". sev" ". action"; row-gap:6px; }
+    .pulse-stat, .sev-tag, .pulse-action{ justify-self:start; }
+  }
+
+  /* Cards (NGO mode) */
+  .grid-3{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+  @media (max-width:900px){ .grid-3{ grid-template-columns:1fr; } }
+  .match-card{ background:white; border:1px solid var(--line); border-radius:12px; padding:22px; display:flex; flex-direction:column; gap:12px; position:relative;}
+  .real-badge{
+    position:absolute; top:16px; right:16px; font-size:10px; font-weight:700; letter-spacing:.04em;
+    background:var(--teal-deep); color:white; padding:3px 9px; border-radius:999px;
+  }
+  .match-card .org{ font-family:'Fraunces',serif; font-size:18px; color:var(--navy); font-weight:600;}
+  .match-card .tag-row{ display:flex; gap:8px; flex-wrap:wrap; }
+  .chip{ font-size:11.5px; font-weight:600; background:var(--paper-dim); color:var(--ink-soft); padding:4px 10px; border-radius:999px; }
+  .match-card .amount{ font-size:14px; color:var(--ink-soft); }
+  .match-card .amount b{ color:var(--navy); font-size:17px; }
+  .fit-bar{ height:6px; border-radius:999px; background:var(--paper-dim); overflow:hidden; }
+  .fit-fill{ height:100%; background:linear-gradient(90deg,var(--teal),var(--teal-deep)); }
+  .fit-label{ font-size:12px; color:var(--teal-deep); font-weight:700; }
+
+  .ngo-filter-row{ display:flex; gap:12px; align-items:center; margin-bottom:22px; flex-wrap:wrap; }
+  .data-note{ font-size:11.5px; color:var(--ink-soft); margin-top:14px; }
+  .sample-flag{
+    font-size:10px; font-weight:700; letter-spacing:.05em; background:#FCF2E0; color:#B87B1E;
+    padding:3px 9px; border-radius:999px; vertical-align:middle; margin-left:8px;
+  }
+  .govt-tag{
+    font-size:9.5px; font-weight:700; letter-spacing:.04em; color:var(--teal-deep); background:#E7F4F1;
+    padding:2px 7px; border-radius:5px; margin-left:8px;
+  }
+
+  /* How it works strip */
+  .how{ background:var(--navy); color:white; padding:60px 0; margin-top:10px; }
+  .how h2{ color:white; font-size:24px; margin-bottom:34px; }
+  .how-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:26px; }
+  @media (max-width:900px){ .how-grid{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:560px){ .how-grid{ grid-template-columns:1fr; } }
+  .how-step .n{ font-family:'Fraunces',serif; font-size:15px; color:var(--teal); margin-bottom:10px; font-weight:600;}
+  .how-step h3{ font-size:16px; color:white; margin-bottom:8px; }
+  .how-step p{ font-size:13.5px; color:#B9C0D4; margin:0; line-height:1.55; }
+
+  footer{ padding:34px 0; border-top:1px solid var(--line); }
+  footer .foot-row{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
+  footer p{ margin:0; font-size:12.5px; color:var(--ink-soft); }
+
+  .hidden{ display:none !important; }
+  .fade{ animation:fadeIn .35s ease; }
+  @keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+  @media (prefers-reduced-motion: reduce){
+    .pulse-dot::after{ animation:none; }
+    *{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
+  }
+
+  /* Signup modal */
+  .modal-overlay{
+    display:none; position:fixed; inset:0; background:rgba(22,31,56,0.55); z-index:100;
+    align-items:center; justify-content:center; padding:20px;
+  }
+  .modal-overlay.open{ display:flex; }
+  .modal-box{
+    background:white; border-radius:14px; padding:32px; max-width:420px; width:100%;
+    position:relative; box-shadow:0 20px 60px rgba(22,31,56,0.3); max-height:90vh; overflow-y:auto;
+  }
+  .modal-box h3{ font-size:22px; color:var(--navy); margin-bottom:6px; }
+  .modal-sub{ font-size:13.5px; color:var(--ink-soft); margin:0 0 20px 0; line-height:1.5; }
+  .modal-close{
+    position:absolute; top:16px; right:18px; background:none; border:none; font-size:22px;
+    color:var(--ink-soft); cursor:pointer; line-height:1;
+  }
+  .modal-close:hover{ color:var(--navy); }
+  .form-label{
+    display:block; font-size:12.5px; font-weight:600; color:var(--navy); margin-bottom:14px;
+  }
+  .form-label input, .form-label select{
+    display:block; width:100%; margin-top:6px; font-family:'Inter',sans-serif; font-size:14px;
+    padding:10px 12px; border:1px solid var(--line); border-radius:8px; color:var(--ink); background:white;
+  }
+  .form-label input:focus-visible, .form-label select:focus-visible{ outline:2px solid var(--teal); outline-offset:1px; }
+
+  /* State tabs + count */
+  .state-tabs{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+  .state-tabs button{
+    font-family:'Inter',sans-serif; font-size:13px; font-weight:600; padding:8px 16px; border-radius:999px;
+    border:1px solid var(--line); background:white; color:var(--ink-soft); cursor:pointer; transition:all .2s ease;
+  }
+  .state-tabs button.active{ background:var(--navy); border-color:var(--navy); color:white; }
+  .state-tabs button:hover:not(.active){ border-color:var(--navy); color:var(--navy); }
+  .pulse-count{ font-size:12.5px; color:var(--ink-soft); margin:0 0 10px 0; }
+</style>
+</head>
+<body data-mode="donor">
+<a href="#main" class="skip-link">Skip to content</a>
+
+<header>
+  <div class="wrap nav">
+    <div>
+      <div class="wordmark"><span class="dot"></span> ImpactSetu</div>
+      <p class="wordmark-tagline">Because no need should go unseen, and no help should go unclaimed.</p>
+    </div>
+    <div class="mode-toggle" role="group" aria-label="Switch view">
+      <button id="btn-donor" class="active" onclick="setMode('donor')">CSR &amp; Donors</button>
+      <button id="btn-ngo" onclick="setMode('ngo')">NGOs</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <div class="hero-carousel-wrap" id="hero-carousel-wrap" aria-label="Photo carousel">
+    <div class="carousel-slide active" style="background-image:url('images/slide-health-workers.jpg')">
+      <div class="carousel-caption">Frontline health workers — the real network any need-gap platform has to support, not replace.</div>
+    </div>
+    <div class="carousel-slide" style="background-image:url('images/slide-school-girls.jpg')">
+      <div class="carousel-caption">Every result here should someday look like this — real outcomes, delivered on time.</div>
+    </div>
+    <div class="carousel-dots" id="carousel-dots"></div>
+  </div>
+
+  <section class="hero wrap hero-centered">
+    <div class="eyebrow" id="eyebrow">Live need-gap intelligence</div>
+    <h1 id="hero-title">ImpactSetu</h1>
+    <p class="soul-line" id="hero-soulline">Because no family should have to wait for help that already wants to find them.</p>
+    <p class="lede" id="hero-lede">We read public need-data across districts and match it to verified NGOs already working there, so your CSR budget reaches credible organisations beyond the usual well-known names.</p>
+    <div class="hero-cta">
+      <button class="btn btn-primary" id="hero-cta-primary" onclick="document.getElementById('panel-section').scrollIntoView()">Explore the need-gap map</button>
+      <button class="btn btn-ghost" onclick="openSignupModal()">Request early access</button>
+    </div>
+    <div class="hero-stats">
+      <div><b>97</b><span>districts mapped</span></div>
+      <div><b>3</b><span>states covered</span></div>
+      <div><b>NFHS-5</b><span>govt. data source</span></div>
+    </div>
+
+    <div class="mode-explainer">
+      <p><b>CSR &amp; Donors</b> — browse the real need-gap data and a directory of verified NGOs working on the ground.</p>
+      <p><b>NGOs</b> — see CSR teams and foundations currently looking to fund a cause like yours.</p>
+    </div>
+  </section>
+
+  <!-- SDG ALIGNMENT -->
+  <section class="sdg-band">
+    <div class="wrap">
+      <p class="sdg-label">Aligned with the UN Sustainable Development Goals</p>
+      <div class="sdg-row">
+        <div class="sdg-chip" style="background:#4C9F38"><span>3</span>Good Health &amp; Well-being</div>
+        <div class="sdg-chip" style="background:#DDA63A"><span>2</span>Zero Hunger</div>
+        <div class="sdg-chip" style="background:#26BDE2"><span>6</span>Clean Water &amp; Sanitation</div>
+        <div class="sdg-chip" style="background:#19486A"><span>17</span>Partnerships for the Goals</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SIGNUP MODAL -->
+  <div class="modal-overlay" id="signup-overlay" onclick="if(event.target===this) closeSignupModal()">
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button class="modal-close" onclick="closeSignupModal()" aria-label="Close">&times;</button>
+      <div id="modal-form-state">
+        <h3 id="modal-title">Request early access</h3>
+        <p class="modal-sub">Tell us a bit about you — we'll reach out when the platform opens to your region.</p>
+        <form id="signup-form" onsubmit="return handleSignupSubmit(event)">
+          <label class="form-label">I am a
+            <select id="signup-role" required>
+              <option value="">Select one…</option>
+              <option value="NGO">NGO representative</option>
+              <option value="CSR/Donor">CSR head / Donor</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+          <label class="form-label">Full name
+            <input type="text" id="signup-name" required placeholder="Your name">
+          </label>
+          <label class="form-label">Organisation
+            <input type="text" id="signup-org" required placeholder="Organisation name">
+          </label>
+          <label class="form-label">Email
+            <input type="email" id="signup-email" required placeholder="you@example.com">
+          </label>
+          <label class="form-label">City / District
+            <input type="text" id="signup-city" placeholder="e.g. Hyderabad">
+          </label>
+          <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">Submit interest</button>
+        </form>
+      </div>
+      <div id="modal-success" class="hidden">
+        <h3>Thank you!</h3>
+        <p class="modal-sub">Your interest has been recorded. We'll be in touch when ImpactSetu opens to your area.</p>
+        <button class="btn btn-ghost" style="width:100%; margin-top:12px;" onclick="closeSignupModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DONOR VIEW -->
+  <section class="panel wrap" id="panel-section" data-view="donor">
+    <div class="panel-head">
+      <div>
+        <h2>Need-Gap Pulse</h2>
+        <p class="sub">Child nutrition indicators are real NFHS-5 (2019-21) government data, Ministry of Health &amp; Family Welfare, Govt. of India — district child-stunting &amp; sanitation-access rates. Severity bands (High/Medium/Low) are our own simple threshold on the stunting rate, not an official tier.</p>
+      </div>
+      <select id="sev-filter" onchange="renderPulse()" aria-label="Filter by severity">
+        <option value="all">All severities</option>
+        <option value="high">High need</option>
+        <option value="medium">Medium need</option>
+        <option value="low">Low need</option>
+      </select>
+    </div>
+    <div class="state-tabs" id="state-tabs" role="tablist" aria-label="Filter by state"></div>
+    <div class="ngo-filter-row">
+      <input type="text" id="pulse-search" placeholder="Search by district or cause…" oninput="renderPulse()" aria-label="Search need-gap districts" class="search-input">
+    </div>
+    <p class="pulse-count" id="pulse-count"></p>
+    <div class="pulse-list" id="pulse-list"></div>
+    <p class="data-note">Source: NFHS-5 District Fact Sheets, Ministry of Health &amp; Family Welfare, Government of India (rchiips.org/nfhs). NGO counts and matching on the right are illustrative — see "For NGOs" view.</p>
+
+    <div class="panel-head" style="margin-top:52px;">
+      <div>
+        <h2>Verified NGOs <span class="sample-flag" style="background:#E7F4F1; color:var(--teal-deep);">1 REAL · REST SAMPLE</span></h2>
+        <p class="sub">Jivika Foundation is a real, active NGO. The remaining entries are illustrative placeholders standing in for what a full verified directory would look like.</p>
+      </div>
+    </div>
+    <div class="ngo-filter-row">
+      <input type="text" id="ngo-dir-search" placeholder="Search NGOs by name, cause or district…" oninput="renderNgoDirectory()" aria-label="Search verified NGOs" class="search-input">
+    </div>
+    <div class="grid-3" id="ngo-directory"></div>
+  </section>
+
+  <!-- NGO VIEW -->
+  <section class="panel wrap hidden" data-view="ngo">
+    <div class="panel-head">
+      <div>
+        <h2>Matched Opportunities <span class="sample-flag">SAMPLE DATA</span></h2>
+        <p class="sub">Illustrative example only — company names, grant sizes and match scores below are fictional placeholders, not a real CSR database. Shown to demonstrate how matching would work once built.</p>
+      </div>
+    </div>
+    <div class="ngo-filter-row">
+      <input type="text" id="ngo-search" placeholder="Search by company or cause…" oninput="renderMatches()" aria-label="Search matched opportunities" class="search-input">
+      <select id="focus-filter" onchange="renderMatches()" aria-label="Filter by region">
+        <option value="all">All regions</option>
+      </select>
+    </div>
+    <div class="grid-3" id="match-grid"></div>
+  </section>
+
+  <section class="how">
+    <div class="wrap">
+      <h2>How the matching actually works</h2>
+      <div class="how-grid">
+        <div class="how-step"><div class="n">01</div><h3>Read public data</h3><p>NFHS-5 district-level indicators are combined into a live map of underserved needs (Census and NITI Aayog data planned next).</p></div>
+        <div class="how-step"><div class="n">02</div><h3>Verify NGOs</h3><p>Registration (12A / 80G / CSR-1) and track record are checked before an NGO is listed.</p></div>
+        <div class="how-step"><div class="n">03</div><h3>Match by fit</h3><p>Cause area, geography and credibility are scored to rank the strongest matches on both sides.</p></div>
+        <div class="how-step"><div class="n">04</div><h3>Feed the loop</h3><p>Funded NGOs report outcomes back, sharpening the need-map for everyone who comes after.</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot-row">
+    <p>ImpactSetu — MPB Prototype · ICFAI Business School, Hyderabad</p>
+    <p>Prototype data is illustrative, not live.</p>
+  </div>
+</footer>
+
+<script>
+  // REAL DATA: Children under 5 stunted (%) and households with improved sanitation (%)
+  // Source: NFHS-5 (2019-21), Ministry of Health & Family Welfare, Government of India
+  // Severity tiering below is our own simple threshold on the real stunting rate (not an official govt tier):
+  // >=35% stunted = high, 25-34.9% = medium, <25% = low
+  const gaps = [
+    { state:"Karnataka", region:"Bagalkot", cause:"Child Nutrition", stunting:48.3, sanitation:51.3, severity:"high" },
+    { state:"Karnataka", region:"Bangalore", cause:"Child Nutrition", stunting:31.3, sanitation:90.4, severity:"medium" },
+    { state:"Karnataka", region:"Bangalore Rural", cause:"Child Nutrition", stunting:36.6, sanitation:88.8, severity:"high" },
+    { state:"Karnataka", region:"Belgaum", cause:"Child Nutrition", stunting:32.8, sanitation:67.7, severity:"medium" },
+    { state:"Karnataka", region:"Bellary", cause:"Child Nutrition", stunting:36.1, sanitation:64.1, severity:"high" },
+    { state:"Karnataka", region:"Bidar", cause:"Child Nutrition", stunting:36.8, sanitation:56.5, severity:"high" },
+    { state:"Karnataka", region:"Bijapur", cause:"Child Nutrition", stunting:45.9, sanitation:44.8, severity:"high" },
+    { state:"Karnataka", region:"Chamarajanagar", cause:"Child Nutrition", stunting:32.2, sanitation:75.2, severity:"medium" },
+    { state:"Karnataka", region:"Chikkaballapura", cause:"Child Nutrition", stunting:31.3, sanitation:84.9, severity:"medium" },
+    { state:"Karnataka", region:"Chikmagalur", cause:"Child Nutrition", stunting:27.3, sanitation:92.3, severity:"medium" },
+    { state:"Karnataka", region:"Chitradurga", cause:"Child Nutrition", stunting:36.0, sanitation:63.1, severity:"high" },
+    { state:"Karnataka", region:"Dakshina Kannada", cause:"Child Nutrition", stunting:25.1, sanitation:97.1, severity:"medium" },
+    { state:"Karnataka", region:"Davanagere", cause:"Child Nutrition", stunting:38.4, sanitation:83.3, severity:"high" },
+    { state:"Karnataka", region:"Dharwad", cause:"Child Nutrition", stunting:45.2, sanitation:79.3, severity:"high" },
+    { state:"Karnataka", region:"Gadag", cause:"Child Nutrition", stunting:45.2, sanitation:55.2, severity:"high" },
+    { state:"Karnataka", region:"Gulbarga", cause:"Child Nutrition", stunting:34.5, sanitation:36.5, severity:"medium" },
+    { state:"Karnataka", region:"Hassan", cause:"Child Nutrition", stunting:27.1, sanitation:87.9, severity:"medium" },
+    { state:"Karnataka", region:"Haveri", cause:"Child Nutrition", stunting:29.9, sanitation:68.9, severity:"medium" },
+    { state:"Karnataka", region:"Kodagu", cause:"Child Nutrition", stunting:30.4, sanitation:93.9, severity:"medium" },
+    { state:"Karnataka", region:"Kolar", cause:"Child Nutrition", stunting:31.1, sanitation:89.2, severity:"medium" },
+    { state:"Karnataka", region:"Koppal", cause:"Child Nutrition", stunting:49.1, sanitation:58.8, severity:"high" },
+    { state:"Karnataka", region:"Mandya", cause:"Child Nutrition", stunting:24.3, sanitation:86.7, severity:"low" },
+    { state:"Karnataka", region:"Mysore", cause:"Child Nutrition", stunting:27.5, sanitation:86.4, severity:"medium" },
+    { state:"Karnataka", region:"Raichur", cause:"Child Nutrition", stunting:39.8, sanitation:53.0, severity:"high" },
+    { state:"Karnataka", region:"Ramanagara", cause:"Child Nutrition", stunting:15.6, sanitation:89.6, severity:"low" },
+    { state:"Karnataka", region:"Shimoga", cause:"Child Nutrition", stunting:29.0, sanitation:85.4, severity:"medium" },
+    { state:"Karnataka", region:"Tumkur", cause:"Child Nutrition", stunting:40.3, sanitation:86.1, severity:"high" },
+    { state:"Karnataka", region:"Udupi", cause:"Child Nutrition", stunting:23.1, sanitation:94.5, severity:"low" },
+    { state:"Karnataka", region:"Uttara Kannada", cause:"Child Nutrition", stunting:29.6, sanitation:89.6, severity:"medium" },
+    { state:"Karnataka", region:"Yadgir", cause:"Child Nutrition", stunting:57.6, sanitation:37.4, severity:"high" },
+    { state:"Maharashtra", region:"Ahmednagar", cause:"Child Nutrition", stunting:31.7, sanitation:79.5, severity:"medium" },
+    { state:"Maharashtra", region:"Akola", cause:"Child Nutrition", stunting:31.8, sanitation:69.5, severity:"medium" },
+    { state:"Maharashtra", region:"Amravati", cause:"Child Nutrition", stunting:29.0, sanitation:75.7, severity:"medium" },
+    { state:"Maharashtra", region:"Aurangabad", cause:"Child Nutrition", stunting:34.2, sanitation:69.1, severity:"medium" },
+    { state:"Maharashtra", region:"Bhandara", cause:"Child Nutrition", stunting:31.3, sanitation:81.8, severity:"medium" },
+    { state:"Maharashtra", region:"Bid", cause:"Child Nutrition", stunting:40.8, sanitation:66.4, severity:"high" },
+    { state:"Maharashtra", region:"Buldana", cause:"Child Nutrition", stunting:45.0, sanitation:68.9, severity:"high" },
+    { state:"Maharashtra", region:"Chandrapur", cause:"Child Nutrition", stunting:37.3, sanitation:77.3, severity:"high" },
+    { state:"Maharashtra", region:"Dhule", cause:"Child Nutrition", stunting:37.6, sanitation:58.9, severity:"high" },
+    { state:"Maharashtra", region:"Gadchiroli", cause:"Child Nutrition", stunting:35.7, sanitation:62.4, severity:"high" },
+    { state:"Maharashtra", region:"Gondiya", cause:"Child Nutrition", stunting:36.9, sanitation:74.3, severity:"high" },
+    { state:"Maharashtra", region:"Hingoli", cause:"Child Nutrition", stunting:37.4, sanitation:69.0, severity:"high" },
+    { state:"Maharashtra", region:"Jalgaon", cause:"Child Nutrition", stunting:36.3, sanitation:59.7, severity:"high" },
+    { state:"Maharashtra", region:"Jalna", cause:"Child Nutrition", stunting:38.0, sanitation:63.6, severity:"high" },
+    { state:"Maharashtra", region:"Kolhapur", cause:"Child Nutrition", stunting:33.6, sanitation:82.0, severity:"medium" },
+    { state:"Maharashtra", region:"Latur", cause:"Child Nutrition", stunting:43.2, sanitation:72.5, severity:"high" },
+    { state:"Maharashtra", region:"Mumbai", cause:"Child Nutrition", stunting:26.6, sanitation:58.6, severity:"medium" },
+    { state:"Maharashtra", region:"Mumbai Suburban", cause:"Child Nutrition", stunting:37.2, sanitation:62.6, severity:"high" },
+    { state:"Maharashtra", region:"Nagpur", cause:"Child Nutrition", stunting:27.6, sanitation:88.9, severity:"medium" },
+    { state:"Maharashtra", region:"Nanded", cause:"Child Nutrition", stunting:36.0, sanitation:68.0, severity:"high" },
+    { state:"Maharashtra", region:"Nandurbar", cause:"Child Nutrition", stunting:45.8, sanitation:54.1, severity:"high" },
+    { state:"Maharashtra", region:"Nashik", cause:"Child Nutrition", stunting:42.2, sanitation:68.3, severity:"high" },
+    { state:"Maharashtra", region:"Osmanabad", cause:"Child Nutrition", stunting:37.2, sanitation:71.2, severity:"high" },
+    { state:"Maharashtra", region:"Palghar", cause:"Child Nutrition", stunting:33.0, sanitation:75.1, severity:"medium" },
+    { state:"Maharashtra", region:"Parbhani", cause:"Child Nutrition", stunting:37.6, sanitation:60.1, severity:"high" },
+    { state:"Maharashtra", region:"Pune", cause:"Child Nutrition", stunting:30.7, sanitation:79.6, severity:"medium" },
+    { state:"Maharashtra", region:"Raigarh", cause:"Child Nutrition", stunting:35.8, sanitation:74.8, severity:"high" },
+    { state:"Maharashtra", region:"Ratnagiri", cause:"Child Nutrition", stunting:31.7, sanitation:85.6, severity:"medium" },
+    { state:"Maharashtra", region:"Sangli", cause:"Child Nutrition", stunting:35.0, sanitation:84.7, severity:"high" },
+    { state:"Maharashtra", region:"Satara", cause:"Child Nutrition", stunting:20.2, sanitation:78.7, severity:"low" },
+    { state:"Maharashtra", region:"Sindhudurg", cause:"Child Nutrition", stunting:30.8, sanitation:87.9, severity:"medium" },
+    { state:"Maharashtra", region:"Solapur", cause:"Child Nutrition", stunting:36.3, sanitation:67.8, severity:"high" },
+    { state:"Maharashtra", region:"Thane", cause:"Child Nutrition", stunting:40.8, sanitation:74.7, severity:"high" },
+    { state:"Maharashtra", region:"Wardha", cause:"Child Nutrition", stunting:27.7, sanitation:80.2, severity:"medium" },
+    { state:"Maharashtra", region:"Washim", cause:"Child Nutrition", stunting:35.3, sanitation:61.5, severity:"high" },
+    { state:"Maharashtra", region:"Yavatmal", cause:"Child Nutrition", stunting:36.6, sanitation:66.4, severity:"high" },
+    { state:"Telangana", region:"Adilabad", cause:"Child Nutrition", stunting:45.7, sanitation:50.8, severity:"high" },
+    { state:"Telangana", region:"Bhadradri Kothagudem", cause:"Child Nutrition", stunting:28.4, sanitation:75.3, severity:"medium" },
+    { state:"Telangana", region:"Hyderabad", cause:"Child Nutrition", stunting:30.4, sanitation:84.4, severity:"medium" },
+    { state:"Telangana", region:"Jagitial", cause:"Child Nutrition", stunting:29.9, sanitation:76.5, severity:"medium" },
+    { state:"Telangana", region:"Jangoan", cause:"Child Nutrition", stunting:33.4, sanitation:84.3, severity:"medium" },
+    { state:"Telangana", region:"Jayashankar Bhupalapally", cause:"Child Nutrition", stunting:32.5, sanitation:65.6, severity:"medium" },
+    { state:"Telangana", region:"Jogulamba Gadwal", cause:"Child Nutrition", stunting:49.7, sanitation:73.7, severity:"high" },
+    { state:"Telangana", region:"Kamareddy", cause:"Child Nutrition", stunting:33.4, sanitation:68.2, severity:"medium" },
+    { state:"Telangana", region:"Karimnagar", cause:"Child Nutrition", stunting:30.3, sanitation:78.8, severity:"medium" },
+    { state:"Telangana", region:"Khammam", cause:"Child Nutrition", stunting:22.2, sanitation:84.5, severity:"low" },
+    { state:"Telangana", region:"Komaram Bheem Asifabad", cause:"Child Nutrition", stunting:38.1, sanitation:54.0, severity:"high" },
+    { state:"Telangana", region:"Mahabubabad", cause:"Child Nutrition", stunting:33.0, sanitation:68.6, severity:"medium" },
+    { state:"Telangana", region:"Mahabubnagar", cause:"Child Nutrition", stunting:42.6, sanitation:73.7, severity:"high" },
+    { state:"Telangana", region:"Mancherial", cause:"Child Nutrition", stunting:25.9, sanitation:78.1, severity:"medium" },
+    { state:"Telangana", region:"Medak", cause:"Child Nutrition", stunting:36.4, sanitation:78.2, severity:"high" },
+    { state:"Telangana", region:"Medchal-Malkajgiri", cause:"Child Nutrition", stunting:33.4, sanitation:86.2, severity:"medium" },
+    { state:"Telangana", region:"Nagarkurnool", cause:"Child Nutrition", stunting:35.1, sanitation:73.2, severity:"high" },
+    { state:"Telangana", region:"Nalgonda", cause:"Child Nutrition", stunting:31.7, sanitation:76.4, severity:"medium" },
+    { state:"Telangana", region:"Nirmal", cause:"Child Nutrition", stunting:31.7, sanitation:63.6, severity:"medium" },
+    { state:"Telangana", region:"Nizamabad", cause:"Child Nutrition", stunting:30.5, sanitation:72.5, severity:"medium" },
+    { state:"Telangana", region:"Peddapalli", cause:"Child Nutrition", stunting:27.5, sanitation:77.8, severity:"medium" },
+    { state:"Telangana", region:"Rajanna Sircilla", cause:"Child Nutrition", stunting:22.4, sanitation:77.4, severity:"low" },
+    { state:"Telangana", region:"Ranga Reddy", cause:"Child Nutrition", stunting:37.8, sanitation:81.1, severity:"high" },
+    { state:"Telangana", region:"Sangareddy", cause:"Child Nutrition", stunting:32.9, sanitation:68.0, severity:"medium" },
+    { state:"Telangana", region:"Siddipet", cause:"Child Nutrition", stunting:28.1, sanitation:84.1, severity:"medium" },
+    { state:"Telangana", region:"Suryapet", cause:"Child Nutrition", stunting:29.1, sanitation:77.9, severity:"medium" },
+    { state:"Telangana", region:"Vikarabad", cause:"Child Nutrition", stunting:32.1, sanitation:66.7, severity:"medium" },
+    { state:"Telangana", region:"Wanaparthy", cause:"Child Nutrition", stunting:40.4, sanitation:75.9, severity:"high" },
+    { state:"Telangana", region:"Warangal Rural", cause:"Child Nutrition", stunting:36.1, sanitation:74.3, severity:"high" },
+    { state:"Telangana", region:"Warangal Urban", cause:"Child Nutrition", stunting:29.5, sanitation:81.2, severity:"medium" },
+    { state:"Telangana", region:"Yadadri Bhuvanagiri", cause:"Child Nutrition", stunting:38.3, sanitation:81.9, severity:"high" },
+  ];
+
+  // SAMPLE / FICTIONAL — no real CSR or NGO database exists yet. Company names, grant
+  // amounts and fit-scores below are illustrative placeholders for the prototype only.
+  const matches = [
+    { org:"Horizon Industries CSR", cause:"Child Nutrition", region:"Adilabad", amount:"₹8–15 L", fit:92 },
+    { org:"Meridian Foundation", cause:"Child Nutrition", region:"Mahabubnagar", amount:"₹5–10 L", fit:87 },
+    { org:"TechNova Giving Fund", cause:"Child Nutrition", region:"Warangal Rural", amount:"₹12–20 L", fit:81 },
+    { org:"Bluewell CSR Trust", cause:"Child Nutrition", region:"Nalgonda", amount:"₹6–9 L", fit:78 },
+    { org:"Anchor Steel CSR Cell", cause:"Child Nutrition", region:"Nizamabad", amount:"₹10–18 L", fit:74 },
+    { org:"Sundial Foundation", cause:"Child Nutrition", region:"Khammam", amount:"₹4–7 L", fit:69 },
+  ];
+
+  // NGO directory — Jivika Foundation is real; the rest are illustrative placeholders,
+  // spread across all three states to reflect the fuller regional picture.
+  const ngoDirectory = [
+    { org:"Jivika Foundation", cause:"Health & TB Awareness", region:"Hyderabad, Telangana", desc:"Runs health-focused CSR partnerships and community TB-awareness campaigns.", real:true },
+    { org:"Prakruti Welfare Trust", cause:"Child Nutrition", region:"Adilabad, Telangana", desc:"Sample entry — placeholder for a verified nutrition-focused NGO.", real:false },
+    { org:"Asha Rural Development Society", cause:"Child Nutrition", region:"Mahabubnagar, Telangana", desc:"Sample entry — placeholder for a verified NGO in this district.", real:false },
+    { org:"Bhoomi Foundation", cause:"Child Nutrition", region:"Warangal Rural, Telangana", desc:"Sample entry — placeholder for a verified NGO in this district.", real:false },
+    { org:"Konkan Coastal Welfare Society", cause:"Child Nutrition", region:"Ratnagiri, Maharashtra", desc:"Sample entry — placeholder for a verified NGO in this district.", real:false },
+    { org:"Vidarbha Child Development Trust", cause:"Child Nutrition", region:"Yavatmal, Maharashtra", desc:"Sample entry — placeholder for a verified NGO in this district.", real:false },
+    { org:"Marathwada Rural Mission", cause:"Child Nutrition", region:"Nanded, Maharashtra", desc:"Sample entry — placeholder for a verified NGO in this district.", real:false },
+    { org:"Hyderabad-Karnataka Seva Sangha", cause:"Child Nutrition", region:"Yadgir, Karnataka", desc:"Sample entry — placeholder for a verified NGO in this district.", real:false },
+    { org:"Deccan Development Foundation", cause:"Child Nutrition", region:"Bijapur, Karnataka", desc:"Sample entry — placeholder for a verified NGO in this district.", real:false },
+    { org:"Malnad Community Trust", cause:"Child Nutrition", region:"Chikmagalur, Karnataka", desc:"Sample entry — placeholder for a verified NGO in this district.", real:false },
+  ];
+
+  function renderNgoDirectory(){
+    const grid = document.getElementById('ngo-directory');
+    if(!grid) return;
+    const query = document.getElementById('ngo-dir-search').value.trim().toLowerCase();
+    grid.innerHTML = "";
+    const filtered = ngoDirectory.filter(n => {
+      return !query || n.org.toLowerCase().includes(query) || n.cause.toLowerCase().includes(query) || n.region.toLowerCase().includes(query);
+    });
+    if(filtered.length === 0){
+      grid.innerHTML = `<p style="color:var(--ink-soft); font-size:13.5px;">No NGOs found — try a different search.</p>`;
+      return;
+    }
+    filtered.forEach(n=>{
+      const card = document.createElement('div');
+      card.className = "match-card fade";
+      card.innerHTML = `
+        ${n.real ? '<span class="real-badge">REAL NGO</span>' : ''}
+        <div class="org">${n.org}</div>
+        <div class="tag-row"><span class="chip">${n.cause}</span><span class="chip">${n.region}</span></div>
+        <div class="amount">${n.desc}</div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  function sevLabel(s){ return s === "high" ? "High" : s === "medium" ? "Medium" : "Low"; }
+
+  function populateFilters(){
+    const focusSel = document.getElementById('focus-filter');
+    [...new Set(matches.map(m=>m.region))].forEach(r=>{
+      const o = document.createElement('option'); o.value=r; o.textContent=r; focusSel.appendChild(o);
+    });
+  }
+
+  let activeState = "all";
+
+  function renderStateTabs(){
+    const wrap = document.getElementById('state-tabs');
+    const states = ["all", ...new Set(gaps.map(g=>g.state))];
+    wrap.innerHTML = "";
+    states.forEach(s=>{
+      const btn = document.createElement('button');
+      btn.textContent = s === "all" ? "All 3 states" : s;
+      btn.className = s === activeState ? "active" : "";
+      btn.setAttribute('role','tab');
+      btn.onclick = () => { activeState = s; renderStateTabs(); renderPulse(); };
+      wrap.appendChild(btn);
+    });
+  }
+
+  function renderPulse(){
+    const filter = document.getElementById('sev-filter').value;
+    const query = document.getElementById('pulse-search').value.trim().toLowerCase();
+    const list = document.getElementById('pulse-list');
+    const countEl = document.getElementById('pulse-count');
+    list.innerHTML = "";
+    const filtered = gaps.filter(g => {
+      const matchesSev = filter==="all" || g.severity===filter;
+      const matchesState = activeState==="all" || g.state===activeState;
+      const matchesQuery = !query || g.region.toLowerCase().includes(query) || g.cause.toLowerCase().includes(query) || g.state.toLowerCase().includes(query);
+      return matchesSev && matchesState && matchesQuery;
+    });
+    countEl.textContent = `Showing ${filtered.length} of ${gaps.length} districts across 3 states`;
+    if(filtered.length === 0){
+      list.innerHTML = `<div class="pulse-row"><p style="color:var(--ink-soft); font-size:13.5px; grid-column:1/-1;">No districts found — try a different search or severity.</p></div>`;
+      return;
+    }
+    filtered.forEach(g=>{
+      const row = document.createElement('div');
+      row.className = "pulse-row fade";
+      row.innerHTML = `
+        <span class="pulse-dot ${g.severity}"></span>
+        <span class="pulse-region">${g.region} <span class="state-chip">${g.state}</span><span class="cause">${g.cause}</span></span>
+        <span class="pulse-stat">${g.stunting}% U5 stunted <span class="govt-tag">NFHS-5</span><br>${g.sanitation}% households, improved sanitation</span>
+        <span class="sev-tag ${g.severity}">${sevLabel(g.severity)} need</span>
+        <a class="pulse-action" href="#" onclick="event.preventDefault(); setMode('ngo'); document.getElementById('focus-filter').value='${g.region}'; renderMatches();">See NGOs →</a>
+      `;
+      list.appendChild(row);
+    });
+  }
+
+  function renderMatches(){
+    const filter = document.getElementById('focus-filter').value;
+    const query = document.getElementById('ngo-search').value.trim().toLowerCase();
+    const grid = document.getElementById('match-grid');
+    grid.innerHTML = "";
+    const filtered = matches.filter(m => {
+      const matchesRegion = filter==="all" || m.region===filter;
+      const matchesQuery = !query || m.org.toLowerCase().includes(query) || m.cause.toLowerCase().includes(query) || m.region.toLowerCase().includes(query);
+      return matchesRegion && matchesQuery;
+    });
+    if(filtered.length === 0){
+      grid.innerHTML = `<p style="color:var(--ink-soft); font-size:13.5px;">No sample matches found — try a different search or region.</p>`;
+      return;
+    }
+    filtered.forEach(m=>{
+      const card = document.createElement('div');
+      card.className = "match-card fade";
+      card.innerHTML = `
+        <div class="org">${m.org}</div>
+        <div class="tag-row"><span class="chip">${m.cause}</span><span class="chip">${m.region}</span></div>
+        <div class="amount">Typical grant: <b>${m.amount}</b></div>
+        <div>
+          <div class="fit-bar"><div class="fit-fill" style="width:${m.fit}%"></div></div>
+          <div class="fit-label" style="margin-top:6px;">${m.fit}% match to your profile</div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  function initCarousel(){
+    const slides = document.querySelectorAll('.carousel-slide');
+    const dotsWrap = document.getElementById('carousel-dots');
+    if(!slides.length || !dotsWrap) return;
+    let current = 0;
+    slides.forEach((_, i)=>{
+      const dot = document.createElement('button');
+      dot.setAttribute('aria-label', 'Go to slide ' + (i+1));
+      if(i===0) dot.classList.add('active');
+      dot.onclick = () => showSlide(i);
+      dotsWrap.appendChild(dot);
+    });
+    const dots = dotsWrap.querySelectorAll('button');
+    function showSlide(i){
+      slides.forEach((s, idx)=> s.classList.toggle('active', idx===i));
+      dots.forEach((d, idx)=> d.classList.toggle('active', idx===i));
+      current = i;
+    }
+    setInterval(()=> showSlide((current+1) % slides.length), 4000);
+  }
+
+  function openSignupModal(){
+    document.getElementById('signup-overlay').classList.add('open');
+    document.getElementById('modal-form-state').classList.remove('hidden');
+    document.getElementById('modal-success').classList.add('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeSignupModal(){
+    document.getElementById('signup-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function handleSignupSubmit(e){
+    e.preventDefault();
+    // Prototype only: no backend wired yet. Logs to console and shows a success state
+    // so the interaction can be demoed end-to-end. Replace with a real form endpoint
+    // (e.g. Formspree/Google Form) before treating submissions as real leads.
+    const entry = {
+      role: document.getElementById('signup-role').value,
+      name: document.getElementById('signup-name').value,
+      org: document.getElementById('signup-org').value,
+      email: document.getElementById('signup-email').value,
+      city: document.getElementById('signup-city').value,
+      submittedAt: new Date().toISOString(),
+    };
+    console.log("ImpactSetu early-access signup (prototype, not yet sent anywhere):", entry);
+    document.getElementById('modal-form-state').classList.add('hidden');
+    document.getElementById('modal-success').classList.remove('hidden');
+    document.getElementById('signup-form').reset();
+    return false;
+  }
+
+  function setMode(mode){
+    document.body.dataset.mode = mode;
+    document.getElementById('btn-donor').classList.toggle('active', mode==='donor');
+    document.getElementById('btn-ngo').classList.toggle('active', mode==='ngo');
+    document.querySelectorAll('[data-view]').forEach(el=>{
+      el.classList.toggle('hidden', el.dataset.view !== mode);
+    });
+    const eyebrow = document.getElementById('eyebrow');
+    const soulLine = document.getElementById('hero-soulline');
+    const lede = document.getElementById('hero-lede');
+    const cta = document.getElementById('hero-cta-primary');
+    if(mode==='donor'){
+      eyebrow.textContent = "Live need-gap intelligence";
+      soulLine.textContent = "Because no family should have to wait for help that already wants to find them.";
+      lede.textContent = "We read public need-data across districts and match it to verified NGOs already working there, so your CSR budget reaches credible organisations beyond the usual well-known names.";
+      cta.textContent = "Explore the need-gap map";
+    } else {
+      eyebrow.textContent = "Get discovered by real funders";
+      soulLine.textContent = "Because doing real work in a forgotten district shouldn't mean staying invisible to those who want to help.";
+      lede.textContent = "We show CSR heads and foundations actively looking to fund causes like yours — so visibility depends on your work, not just who you already know.";
+      cta.textContent = "See matched opportunities";
+    }
+    [soulLine, lede].forEach(el=>{ el.classList.remove('fade'); void el.offsetWidth; el.classList.add('fade'); });
+  }
+
+  populateFilters();
+  renderStateTabs();
+  renderPulse();
+  renderMatches();
+  renderNgoDirectory();
+  initCarousel();
+</script>
+</body>
+</html>
