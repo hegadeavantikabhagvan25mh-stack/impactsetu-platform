@@ -1,0 +1,793 @@
+{
+  "dataset_name": "District Child Nutrition & Sanitation Indicators",
+  "source": "National Family Health Survey (NFHS-5), 2019-21",
+  "publisher": "Ministry of Health & Family Welfare, Government of India",
+  "official_resource_page": "https://www.data.gov.in/resource/all-india-and-stateut-wise-factsheets-national-family-health-survey-nfhs-5-2019-2021",
+  "primary_source_site": "http://rchiips.org/nfhs/",
+  "retrieved_date": "2026-09-02",
+  "live_api_status": "No live API is currently published by data.gov.in for this specific NFHS-5 resource (confirmed by checking the resource page directly \u2014 it displays 'The API for this resource does not exist'). This dataset is a versioned snapshot, not a live feed.",
+  "refresh_plan": "Planned: a scheduled GitHub Action to check data.gov.in for newly published district-level releases and update this file automatically. Not yet implemented.",
+  "indicators": {
+    "stunting_pct": "Children under 5 years who are stunted (height-for-age), percent",
+    "sanitation_pct": "Population living in households that use an improved sanitation facility, percent"
+  },
+  "severity_methodology": "Severity band is ImpactSetu's own threshold applied to the real stunting_pct figure (>=35% high, 25-34.9% medium, <25% low) \u2014 not an official government classification.",
+  "districts": [
+    {
+      "state": "Karnataka",
+      "region": "Bagalkot",
+      "cause": "Child Nutrition",
+      "stunting_pct": 48.3,
+      "sanitation_pct": 51.3,
+      "severity": "high"
+    },
+    {
+      "state": "Karnataka",
+      "region": "Bangalore",
+      "cause": "Child Nutrition",
+      "stunting_pct": 31.3,
+      "sanitation_pct": 90.4,
+      "severity": "medium"
+    },
+    {
+      "state": "Karnataka",
+      "region": "Bangalore Rural",
+      "cause": "Child Nutrition",
+      "stunting_pct": 36.6,
+      "sanitation_pct": 88.8,
+      "severity": "high"
+    },
+    {
+      "state": "Karnataka",
+      "region": "Belgaum",
+      "cause": "Child Nutrition",
+      "stunting_pct": 32.8,
+      "sanitation_pct": 67.7,
+      "severity": "medium"
+    },
+    {
+      "state": "Karnataka",
+      "region": "Bellary",
+      "cause": "Child Nutrition",
+      "stunting_pct": 36.1,
+      "sanitation_pct": 64.1,
+      "severity": "high"
+    },
+    {
+      "state": "Karnataka",
+      "region": "Bidar",
+      "cause": "Child Nutrition",
+      "stunting_pct": 36.8,
+      "sanitation_pct": 56.5,
+      "severity": "high"
+    },
+    {
+      "state": "Karnataka",
+      "region": "Bijapur",
+      "cause": "Child Nutrition",
+      "stunting_pct": 45.9,
+      "sanitation_pct": 44.8,
+      "severity": "high"
+    },
+    {
+      "state": "Karnataka",
+      "region": "Chamarajanagar",
+      "cause": "Child Nutrition",
+      "stunting_pct": 32.2,
+      "sanitation_pct": 75.2,
+      "severity": "medium"
+    },
+    {
+      "state": "Karnataka",
+      "region": "Chikkaballapura",
+      "cause": "Child Nutrition",
+      "stunting_pct": 31.3,
+      "sanitation_pct": 84.9,
+      "severity": "medium"
+    },
+    {
+      "state": "Karnataka",
+      "region": "Chikmagalur",
+      "cause": "Child Nutrition",
+      "stunting_pct": 27.3,
+      "sanitation_pct": 92.3,
+      "severity": "medium"
+    },
+    {
+      "state": "Karnataka",
+      "region": "Chitradurga",
+      "cause": "Child Nutrition",
+      "stunting_pct": 36.0,
+      "sanitation_pct": 63.1,
+      "severity": "high"
+    },
+    {
+      "state": "Karnataka",
+      "region": "Dakshina Kannada",
+      "cause": "Child Nutrition",
+      "stunting_pct": 25.1,
+      "sanitation_pct": 97.1,
+      "severity": "medium"
+    },
+    {
+      "state": "Karnataka",
+      "region": "Davanagere",
+      "cause": "Child Nutrition",
+      "stunting_pct": 38.4,
+      "sanitation_pct": 83.3,
+      "severity": "high"
+    },
+    {
+      "state": "Karnataka",
+      "region": "Dharwad",
+      "cause": "Child Nutrition",
+      "stunting_pct": 45.2,
+      "sanitation_pct": 79.3,
+      "severity": "high"
+    },
+    {
+      "state": "Karnataka",
+      "region": "Gadag",
+      "cause": "Child Nutrition",
+      "stunting_pct": 45.2,
+      "sanitation_pct": 55.2,
+      "severity": "high"
+    },
+    {
+      "state": "Karnataka",
+      "region": "Gulbarga",
+      "cause": "Child Nutrition",
+      "stunting_pct": 34.5,
+      "sanitation_pct": 36.5,
+      "severity": "medium"
+    },
+    {
+      "state": "Karnataka",
+      "region": "Hassan",
+      "cause": "Child Nutrition",
+      "stunting_pct": 27.1,
+      "sanitation_pct": 87.9,
+      "severity": "medium"
+    },
+    {
+      "state": "Karnataka",
+      "region": "Haveri",
+      "cause": "Child Nutrition",
+      "stunting_pct": 29.9,
+      "sanitation_pct": 68.9,
+      "severity": "medium"
+    },
+    {
+      "state": "Karnataka",
+      "region": "Kodagu",
+      "cause": "Child Nutrition",
+      "stunting_pct": 30.4,
+      "sanitation_pct": 93.9,
+      "severity": "medium"
+    },
+    {
+      "state": "Karnataka",
+      "region": "Kolar",
+      "cause": "Child Nutrition",
+      "stunting_pct": 31.1,
+      "sanitation_pct": 89.2,
+      "severity": "medium"
+    },
+    {
+      "state": "Karnataka",
+      "region": "Koppal",
+      "cause": "Child Nutrition",
+      "stunting_pct": 49.1,
+      "sanitation_pct": 58.8,
+      "severity": "high"
+    },
+    {
+      "state": "Karnataka",
+      "region": "Mandya",
+      "cause": "Child Nutrition",
+      "stunting_pct": 24.3,
+      "sanitation_pct": 86.7,
+      "severity": "low"
+    },
+    {
+      "state": "Karnataka",
+      "region": "Mysore",
+      "cause": "Child Nutrition",
+      "stunting_pct": 27.5,
+      "sanitation_pct": 86.4,
+      "severity": "medium"
+    },
+    {
+      "state": "Karnataka",
+      "region": "Raichur",
+      "cause": "Child Nutrition",
+      "stunting_pct": 39.8,
+      "sanitation_pct": 53.0,
+      "severity": "high"
+    },
+    {
+      "state": "Karnataka",
+      "region": "Ramanagara",
+      "cause": "Child Nutrition",
+      "stunting_pct": 15.6,
+      "sanitation_pct": 89.6,
+      "severity": "low"
+    },
+    {
+      "state": "Karnataka",
+      "region": "Shimoga",
+      "cause": "Child Nutrition",
+      "stunting_pct": 29.0,
+      "sanitation_pct": 85.4,
+      "severity": "medium"
+    },
+    {
+      "state": "Karnataka",
+      "region": "Tumkur",
+      "cause": "Child Nutrition",
+      "stunting_pct": 40.3,
+      "sanitation_pct": 86.1,
+      "severity": "high"
+    },
+    {
+      "state": "Karnataka",
+      "region": "Udupi",
+      "cause": "Child Nutrition",
+      "stunting_pct": 23.1,
+      "sanitation_pct": 94.5,
+      "severity": "low"
+    },
+    {
+      "state": "Karnataka",
+      "region": "Uttara Kannada",
+      "cause": "Child Nutrition",
+      "stunting_pct": 29.6,
+      "sanitation_pct": 89.6,
+      "severity": "medium"
+    },
+    {
+      "state": "Karnataka",
+      "region": "Yadgir",
+      "cause": "Child Nutrition",
+      "stunting_pct": 57.6,
+      "sanitation_pct": 37.4,
+      "severity": "high"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Ahmednagar",
+      "cause": "Child Nutrition",
+      "stunting_pct": 31.7,
+      "sanitation_pct": 79.5,
+      "severity": "medium"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Akola",
+      "cause": "Child Nutrition",
+      "stunting_pct": 31.8,
+      "sanitation_pct": 69.5,
+      "severity": "medium"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Amravati",
+      "cause": "Child Nutrition",
+      "stunting_pct": 29.0,
+      "sanitation_pct": 75.7,
+      "severity": "medium"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Aurangabad",
+      "cause": "Child Nutrition",
+      "stunting_pct": 34.2,
+      "sanitation_pct": 69.1,
+      "severity": "medium"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Bhandara",
+      "cause": "Child Nutrition",
+      "stunting_pct": 31.3,
+      "sanitation_pct": 81.8,
+      "severity": "medium"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Bid",
+      "cause": "Child Nutrition",
+      "stunting_pct": 40.8,
+      "sanitation_pct": 66.4,
+      "severity": "high"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Buldana",
+      "cause": "Child Nutrition",
+      "stunting_pct": 45.0,
+      "sanitation_pct": 68.9,
+      "severity": "high"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Chandrapur",
+      "cause": "Child Nutrition",
+      "stunting_pct": 37.3,
+      "sanitation_pct": 77.3,
+      "severity": "high"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Dhule",
+      "cause": "Child Nutrition",
+      "stunting_pct": 37.6,
+      "sanitation_pct": 58.9,
+      "severity": "high"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Gadchiroli",
+      "cause": "Child Nutrition",
+      "stunting_pct": 35.7,
+      "sanitation_pct": 62.4,
+      "severity": "high"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Gondiya",
+      "cause": "Child Nutrition",
+      "stunting_pct": 36.9,
+      "sanitation_pct": 74.3,
+      "severity": "high"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Hingoli",
+      "cause": "Child Nutrition",
+      "stunting_pct": 37.4,
+      "sanitation_pct": 69.0,
+      "severity": "high"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Jalgaon",
+      "cause": "Child Nutrition",
+      "stunting_pct": 36.3,
+      "sanitation_pct": 59.7,
+      "severity": "high"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Jalna",
+      "cause": "Child Nutrition",
+      "stunting_pct": 38.0,
+      "sanitation_pct": 63.6,
+      "severity": "high"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Kolhapur",
+      "cause": "Child Nutrition",
+      "stunting_pct": 33.6,
+      "sanitation_pct": 82.0,
+      "severity": "medium"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Latur",
+      "cause": "Child Nutrition",
+      "stunting_pct": 43.2,
+      "sanitation_pct": 72.5,
+      "severity": "high"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Mumbai",
+      "cause": "Child Nutrition",
+      "stunting_pct": 26.6,
+      "sanitation_pct": 58.6,
+      "severity": "medium"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Mumbai Suburban",
+      "cause": "Child Nutrition",
+      "stunting_pct": 37.2,
+      "sanitation_pct": 62.6,
+      "severity": "high"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Nagpur",
+      "cause": "Child Nutrition",
+      "stunting_pct": 27.6,
+      "sanitation_pct": 88.9,
+      "severity": "medium"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Nanded",
+      "cause": "Child Nutrition",
+      "stunting_pct": 36.0,
+      "sanitation_pct": 68.0,
+      "severity": "high"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Nandurbar",
+      "cause": "Child Nutrition",
+      "stunting_pct": 45.8,
+      "sanitation_pct": 54.1,
+      "severity": "high"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Nashik",
+      "cause": "Child Nutrition",
+      "stunting_pct": 42.2,
+      "sanitation_pct": 68.3,
+      "severity": "high"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Osmanabad",
+      "cause": "Child Nutrition",
+      "stunting_pct": 37.2,
+      "sanitation_pct": 71.2,
+      "severity": "high"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Palghar",
+      "cause": "Child Nutrition",
+      "stunting_pct": 33.0,
+      "sanitation_pct": 75.1,
+      "severity": "medium"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Parbhani",
+      "cause": "Child Nutrition",
+      "stunting_pct": 37.6,
+      "sanitation_pct": 60.1,
+      "severity": "high"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Pune",
+      "cause": "Child Nutrition",
+      "stunting_pct": 30.7,
+      "sanitation_pct": 79.6,
+      "severity": "medium"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Raigarh",
+      "cause": "Child Nutrition",
+      "stunting_pct": 35.8,
+      "sanitation_pct": 74.8,
+      "severity": "high"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Ratnagiri",
+      "cause": "Child Nutrition",
+      "stunting_pct": 31.7,
+      "sanitation_pct": 85.6,
+      "severity": "medium"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Sangli",
+      "cause": "Child Nutrition",
+      "stunting_pct": 35.0,
+      "sanitation_pct": 84.7,
+      "severity": "high"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Satara",
+      "cause": "Child Nutrition",
+      "stunting_pct": 20.2,
+      "sanitation_pct": 78.7,
+      "severity": "low"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Sindhudurg",
+      "cause": "Child Nutrition",
+      "stunting_pct": 30.8,
+      "sanitation_pct": 87.9,
+      "severity": "medium"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Solapur",
+      "cause": "Child Nutrition",
+      "stunting_pct": 36.3,
+      "sanitation_pct": 67.8,
+      "severity": "high"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Thane",
+      "cause": "Child Nutrition",
+      "stunting_pct": 40.8,
+      "sanitation_pct": 74.7,
+      "severity": "high"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Wardha",
+      "cause": "Child Nutrition",
+      "stunting_pct": 27.7,
+      "sanitation_pct": 80.2,
+      "severity": "medium"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Washim",
+      "cause": "Child Nutrition",
+      "stunting_pct": 35.3,
+      "sanitation_pct": 61.5,
+      "severity": "high"
+    },
+    {
+      "state": "Maharashtra",
+      "region": "Yavatmal",
+      "cause": "Child Nutrition",
+      "stunting_pct": 36.6,
+      "sanitation_pct": 66.4,
+      "severity": "high"
+    },
+    {
+      "state": "Telangana",
+      "region": "Adilabad",
+      "cause": "Child Nutrition",
+      "stunting_pct": 45.7,
+      "sanitation_pct": 50.8,
+      "severity": "high"
+    },
+    {
+      "state": "Telangana",
+      "region": "Bhadradri Kothagudem",
+      "cause": "Child Nutrition",
+      "stunting_pct": 28.4,
+      "sanitation_pct": 75.3,
+      "severity": "medium"
+    },
+    {
+      "state": "Telangana",
+      "region": "Hyderabad",
+      "cause": "Child Nutrition",
+      "stunting_pct": 30.4,
+      "sanitation_pct": 84.4,
+      "severity": "medium"
+    },
+    {
+      "state": "Telangana",
+      "region": "Jagitial",
+      "cause": "Child Nutrition",
+      "stunting_pct": 29.9,
+      "sanitation_pct": 76.5,
+      "severity": "medium"
+    },
+    {
+      "state": "Telangana",
+      "region": "Jangoan",
+      "cause": "Child Nutrition",
+      "stunting_pct": 33.4,
+      "sanitation_pct": 84.3,
+      "severity": "medium"
+    },
+    {
+      "state": "Telangana",
+      "region": "Jayashankar Bhupalapally",
+      "cause": "Child Nutrition",
+      "stunting_pct": 32.5,
+      "sanitation_pct": 65.6,
+      "severity": "medium"
+    },
+    {
+      "state": "Telangana",
+      "region": "Jogulamba Gadwal",
+      "cause": "Child Nutrition",
+      "stunting_pct": 49.7,
+      "sanitation_pct": 73.7,
+      "severity": "high"
+    },
+    {
+      "state": "Telangana",
+      "region": "Kamareddy",
+      "cause": "Child Nutrition",
+      "stunting_pct": 33.4,
+      "sanitation_pct": 68.2,
+      "severity": "medium"
+    },
+    {
+      "state": "Telangana",
+      "region": "Karimnagar",
+      "cause": "Child Nutrition",
+      "stunting_pct": 30.3,
+      "sanitation_pct": 78.8,
+      "severity": "medium"
+    },
+    {
+      "state": "Telangana",
+      "region": "Khammam",
+      "cause": "Child Nutrition",
+      "stunting_pct": 22.2,
+      "sanitation_pct": 84.5,
+      "severity": "low"
+    },
+    {
+      "state": "Telangana",
+      "region": "Komaram Bheem Asifabad",
+      "cause": "Child Nutrition",
+      "stunting_pct": 38.1,
+      "sanitation_pct": 54.0,
+      "severity": "high"
+    },
+    {
+      "state": "Telangana",
+      "region": "Mahabubabad",
+      "cause": "Child Nutrition",
+      "stunting_pct": 33.0,
+      "sanitation_pct": 68.6,
+      "severity": "medium"
+    },
+    {
+      "state": "Telangana",
+      "region": "Mahabubnagar",
+      "cause": "Child Nutrition",
+      "stunting_pct": 42.6,
+      "sanitation_pct": 73.7,
+      "severity": "high"
+    },
+    {
+      "state": "Telangana",
+      "region": "Mancherial",
+      "cause": "Child Nutrition",
+      "stunting_pct": 25.9,
+      "sanitation_pct": 78.1,
+      "severity": "medium"
+    },
+    {
+      "state": "Telangana",
+      "region": "Medak",
+      "cause": "Child Nutrition",
+      "stunting_pct": 36.4,
+      "sanitation_pct": 78.2,
+      "severity": "high"
+    },
+    {
+      "state": "Telangana",
+      "region": "Medchal-Malkajgiri",
+      "cause": "Child Nutrition",
+      "stunting_pct": 33.4,
+      "sanitation_pct": 86.2,
+      "severity": "medium"
+    },
+    {
+      "state": "Telangana",
+      "region": "Nagarkurnool",
+      "cause": "Child Nutrition",
+      "stunting_pct": 35.1,
+      "sanitation_pct": 73.2,
+      "severity": "high"
+    },
+    {
+      "state": "Telangana",
+      "region": "Nalgonda",
+      "cause": "Child Nutrition",
+      "stunting_pct": 31.7,
+      "sanitation_pct": 76.4,
+      "severity": "medium"
+    },
+    {
+      "state": "Telangana",
+      "region": "Nirmal",
+      "cause": "Child Nutrition",
+      "stunting_pct": 31.7,
+      "sanitation_pct": 63.6,
+      "severity": "medium"
+    },
+    {
+      "state": "Telangana",
+      "region": "Nizamabad",
+      "cause": "Child Nutrition",
+      "stunting_pct": 30.5,
+      "sanitation_pct": 72.5,
+      "severity": "medium"
+    },
+    {
+      "state": "Telangana",
+      "region": "Peddapalli",
+      "cause": "Child Nutrition",
+      "stunting_pct": 27.5,
+      "sanitation_pct": 77.8,
+      "severity": "medium"
+    },
+    {
+      "state": "Telangana",
+      "region": "Rajanna Sircilla",
+      "cause": "Child Nutrition",
+      "stunting_pct": 22.4,
+      "sanitation_pct": 77.4,
+      "severity": "low"
+    },
+    {
+      "state": "Telangana",
+      "region": "Ranga Reddy",
+      "cause": "Child Nutrition",
+      "stunting_pct": 37.8,
+      "sanitation_pct": 81.1,
+      "severity": "high"
+    },
+    {
+      "state": "Telangana",
+      "region": "Sangareddy",
+      "cause": "Child Nutrition",
+      "stunting_pct": 32.9,
+      "sanitation_pct": 68.0,
+      "severity": "medium"
+    },
+    {
+      "state": "Telangana",
+      "region": "Siddipet",
+      "cause": "Child Nutrition",
+      "stunting_pct": 28.1,
+      "sanitation_pct": 84.1,
+      "severity": "medium"
+    },
+    {
+      "state": "Telangana",
+      "region": "Suryapet",
+      "cause": "Child Nutrition",
+      "stunting_pct": 29.1,
+      "sanitation_pct": 77.9,
+      "severity": "medium"
+    },
+    {
+      "state": "Telangana",
+      "region": "Vikarabad",
+      "cause": "Child Nutrition",
+      "stunting_pct": 32.1,
+      "sanitation_pct": 66.7,
+      "severity": "medium"
+    },
+    {
+      "state": "Telangana",
+      "region": "Wanaparthy",
+      "cause": "Child Nutrition",
+      "stunting_pct": 40.4,
+      "sanitation_pct": 75.9,
+      "severity": "high"
+    },
+    {
+      "state": "Telangana",
+      "region": "Warangal Rural",
+      "cause": "Child Nutrition",
+      "stunting_pct": 36.1,
+      "sanitation_pct": 74.3,
+      "severity": "high"
+    },
+    {
+      "state": "Telangana",
+      "region": "Warangal Urban",
+      "cause": "Child Nutrition",
+      "stunting_pct": 29.5,
+      "sanitation_pct": 81.2,
+      "severity": "medium"
+    },
+    {
+      "state": "Telangana",
+      "region": "Yadadri Bhuvanagiri",
+      "cause": "Child Nutrition",
+      "stunting_pct": 38.3,
+      "sanitation_pct": 81.9,
+      "severity": "high"
+    }
+  ]
+}
