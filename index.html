@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Firebase Auth & Google Login</title>
+  <title>ImpactSetu - Authentication</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -82,22 +82,23 @@
       onAuthStateChanged 
     } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-    // -------------------------------------------------------------
-    // REPLACE THE VALUES BELOW WITH YOUR FIREBASE CONFIG KEYS
-    // -------------------------------------------------------------
+    // Your exact Firebase project configuration
     const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT_ID.firebasestorage.app",
-      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-      appId: "YOUR_APP_ID"
+      apiKey: "AIzaSyBlzSgH-v2CD5n8AOkp9tQ_f8_J7kjfwk4",
+      authDomain: "impactsetu-mpb3.firebaseapp.com",
+      projectId: "impactsetu-mpb3",
+      storageBucket: "impactsetu-mpb3.firebasestorage.app",
+      messagingSenderId: "211603319333",
+      appId: "1:211603319333:web:07c7894790c34cf446adcc",
+      measurementId: "G-4P9HK2NZLR"
     };
 
+    // Initialize Firebase and Authentication
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const googleProvider = new GoogleAuthProvider();
 
+    // UI Elements
     const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('password');
     const signupBtn = document.getElementById('signup-btn');
@@ -111,7 +112,7 @@
     signupBtn.addEventListener('click', () => {
       statusText.textContent = "Creating account...";
       createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
-        .then(() => statusText.textContent = "Account created!")
+        .then(() => statusText.textContent = "Account created successfully!")
         .catch(error => statusText.textContent = "Error: " + error.message);
     });
 
@@ -136,7 +137,7 @@
       signOut(auth).then(() => statusText.textContent = "Logged out successfully.");
     });
 
-    // Auth state listener
+    // Authentication State Listener
     onAuthStateChanged(auth, (user) => {
       if (user) {
         authForm.style.display = 'none';
