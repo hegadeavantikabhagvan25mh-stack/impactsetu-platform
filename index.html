@@ -593,7 +593,7 @@
     const stateFilter = document.getElementById('ngo-state-filter').value;
     grid.innerHTML = "";
     const filtered = ngoDirectory.filter(n => {
-      const matchesQuery = !query || n.org.toLowerCase().includes(query) || n.cause.toLowerCase().includes(query) || n.region.toLowerCase().includes(query);
+      const matchesQuery = !query || (n.org||"").toLowerCase().includes(query) || (n.cause||"").toLowerCase().includes(query) || (n.region||"").toLowerCase().includes(query);
       const matchesCause = causeFilter === "all" || n.cause === causeFilter;
       const matchesState = stateFilter === "all" || n.state === stateFilter;
       return matchesQuery && matchesCause && matchesState;
@@ -605,18 +605,18 @@
     }
     const visible = filtered.slice(0, ngoDirVisibleCount);
     visible.forEach(n=>{
-      const matchedDistrict = gaps.find(g => g.region.toLowerCase() === n.region.toLowerCase() && g.state === n.state);
+      const matchedDistrict = gaps.find(g => (g.region||"").toLowerCase() === (n.region||"").toLowerCase() && g.state === n.state);
       const districtStat = matchedDistrict
         ? `<div class="ngo-district-stat">Working in ${matchedDistrict.region}: ${matchedDistrict.stunting_pct}% child stunting (NFHS-5, ${matchedDistrict.severity} need)</div>`
         : "";
       const card = document.createElement('div');
       card.className = "match-card fade";
       card.innerHTML = `
-        <div class="org">${n.org}</div>
-        <div class="tag-row"><span class="chip">${n.cause}</span><span class="chip">${n.region}, ${n.state}</span></div>
-        <div class="amount">${n.desc}</div>
+        <div class="org">${n.org || "Unnamed NGO"}</div>
+        <div class="tag-row"><span class="chip">${n.cause || "—"}</span><span class="chip">${n.region || "—"}, ${n.state || "—"}</span></div>
+        <div class="amount">${n.desc || ""}</div>
         ${districtStat}
-        <button class="btn btn-ghost" style="margin-top:auto;" onclick="window.ImpactSetuConnect.openModal('ngo', ${JSON.stringify(n.org)}, ${JSON.stringify(n.email || '')})">Connect</button>
+        <button class="btn btn-ghost" style="margin-top:auto;" onclick="window.ImpactSetuConnect.openModal('ngo', ${JSON.stringify(n.org || "")}, ${JSON.stringify(n.email || '')})">Connect</button>
       `;
       grid.appendChild(card);
     });
@@ -681,7 +681,7 @@
     const filtered = gaps.filter(g => {
       const matchesSev = filter==="all" || g.severity===filter;
       const matchesState = activeState==="all" || g.state===activeState;
-      const matchesQuery = !query || g.region.toLowerCase().includes(query) || g.cause.toLowerCase().includes(query) || g.state.toLowerCase().includes(query);
+      const matchesQuery = !query || (g.region||"").toLowerCase().includes(query) || (g.cause||"").toLowerCase().includes(query) || (g.state||"").toLowerCase().includes(query);
       return matchesSev && matchesState && matchesQuery;
     });
     countEl.textContent = `Showing ${filtered.length} of ${gaps.length} districts across 3 states`;
