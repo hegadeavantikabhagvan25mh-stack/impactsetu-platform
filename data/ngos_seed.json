@@ -1,0 +1,16 @@
+{
+  "note": "Your real 11 NGOs, ready to import into Firestore's ngos collection. Add a real email for each one before importing if you have it — leave it \"\" if you don't yet, the Connect button just won't offer a Gmail draft for that NGO until you do.",
+  "ngos": [
+    { "org": "Jivika Foundation", "cause": "Health & TB Awareness", "region": "Pune", "state": "Maharashtra", "desc": "Runs health-focused CSR partnerships and community TB-awareness campaigns.", "email": "" },
+    { "org": "Naandi Foundation", "cause": "Child Nutrition", "region": "Hyderabad", "state": "Telangana", "desc": "One of India's larger nutrition NGOs, running mid-day meal and child nutrition programs (Kiran/Annapurna) reaching over a million children.", "email": "" },
+    { "org": "CRY (Child Rights and You)", "cause": "Child Health & Rights", "region": "Hyderabad", "state": "Telangana", "desc": "National child rights organization with an active Telangana chapter, working on child health, nutrition, and protection.", "email": "" },
+    { "org": "Sri Sathya Sai Annapoorna Trust", "cause": "Child Nutrition", "region": "Warangal Urban", "state": "Telangana", "desc": "Runs the Telangana Nutrition Mission, reportedly serving nutrition supplements to over 20 lakh children daily across the state.", "email": "" },
+    { "org": "Akshaya Patra Foundation", "cause": "Child Nutrition", "region": "Bagalkot", "state": "Karnataka", "desc": "Large-scale mid-day meal program for school children; headquartered in Bengaluru, operating across multiple states.", "email": "" },
+    { "org": "Annam", "cause": "Child & Maternal Nutrition", "region": "Belgaum", "state": "Karnataka", "desc": "Focuses on malnutrition treatment through fortified food supplements for children and mothers.", "email": "" },
+    { "org": "Samarthanam Trust", "cause": "Disability Empowerment", "region": "Bangalore", "state": "Karnataka", "desc": "Bengaluru-based NGO working on empowerment and livelihood support for people with disabilities.", "email": "" },
+    { "org": "SNEHA", "cause": "Child Health & Nutrition", "region": "Mumbai", "state": "Maharashtra", "desc": "Mumbai-based NGO running the Aahar program focused on maternal and child nutrition in urban slum communities.", "email": "" },
+    { "org": "Action Against Hunger India", "cause": "Child Malnutrition Treatment", "region": "Mumbai", "state": "Maharashtra", "desc": "International hunger-focused NGO with an active India program (Project Ankur) treating acute child malnutrition.", "email": "" },
+    { "org": "United Way Mumbai", "cause": "Child Nutrition", "region": "Raigarh", "state": "Maharashtra", "desc": "Supports anganwadi (ICDS) nutrition programs and child welfare initiatives in Maharashtra.", "email": "" },
+    { "org": "Sankalp", "cause": "Tribal Health & Nutrition", "region": "Gadchiroli", "state": "Maharashtra", "desc": "Works on health and nutrition among tribal communities in Gadchiroli, one of Maharashtra's most underserved districts.", "email": "" }
+  ]
+}

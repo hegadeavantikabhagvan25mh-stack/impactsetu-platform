@@ -71,7 +71,7 @@ function ensureModal() {
         <div id="connect-modal-success" class="hidden">
           <h3>Request sent</h3>
           <p class="modal-sub" id="connect-success-sub">We've logged your introduction request. Our team reviews these and makes the actual email connection — check your dashboard for status.</p>
-          <a id="connect-mailto-btn" class="btn btn-primary hidden" style="display:block; text-align:center; text-decoration:none; margin-bottom:10px;" target="_blank" rel="noopener">Open email draft</a>
+          <a id="connect-mailto-btn" class="btn btn-primary hidden" style="display:block; text-align:center; text-decoration:none; margin-bottom:10px;" target="_blank" rel="noopener">Open in Gmail</a>
           <button class="btn btn-ghost" style="width:100%;" onclick="window.ImpactSetuConnect.closeModal()">Close</button>
         </div>
       </div>
@@ -107,10 +107,19 @@ function ensureModal() {
           document.getElementById("connect-message").value +
           (amount ? `\n\nProposed funding range: ${amount}` : "") +
           `\n\n— Sent via ImpactSetu (${user?.email || ""})`;
-        mailtoBtn.href = `mailto:${pendingTarget.targetEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        mailtoBtn.textContent = `Email ${pendingTarget.targetName} now`;
+        // Gmail's own compose-link format — opens Gmail directly (web or
+        // app) with the recipient, subject and body pre-filled. No OAuth,
+        // no API key, no backend: a real Gmail API integration would need
+        // all three just to draft a message, which isn't worth it here.
+        const gmailUrl =
+          `https://mail.google.com/mail/?view=cm&fs=1` +
+          `&to=${encodeURIComponent(pendingTarget.targetEmail)}` +
+          `&su=${encodeURIComponent(subject)}` +
+          `&body=${encodeURIComponent(body)}`;
+        mailtoBtn.href = gmailUrl;
+        mailtoBtn.textContent = `Open in Gmail — email ${pendingTarget.targetName}`;
         mailtoBtn.classList.remove("hidden");
-        successSub.textContent = "We've logged your request, and drafted the actual email for you below — this opens your own mail app so you send it yourself.";
+        successSub.textContent = "We've logged your request, and drafted the actual email in Gmail for you below — review it and hit send yourself.";
       } else {
         mailtoBtn.classList.add("hidden");
         successSub.textContent = "We've logged your introduction request. This organisation doesn't have a direct email on file yet, so our team will make the introduction manually — check your dashboard for status.";
