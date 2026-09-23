@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Log in or register — ImpactSetu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#161F38; --navy-soft:#212B4A; --teal:#0F9C8A; --teal-deep:#0B7A6D;
+    --gold:#E8A33D; --paper:#F6F4EE; --paper-dim:#EDEAE1; --ink:#1B2230;
+    --ink-soft:#57607A; --line:#DAD5C7; --white:#FFFFFF; --danger:#B3261E;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink); font-family:'Inter',sans-serif;
+    font-size:16px; line-height:1.5; min-height:100vh; display:flex; flex-direction:column;
+  }
+  h1,h2,.display{ font-family:'Fraunces',serif; font-weight:600; letter-spacing:-0.01em; margin:0; }
+  a{color:var(--teal-deep);}
+  header{ padding:20px 28px; border-bottom:1px solid var(--line); }
+  .wordmark{display:flex; align-items:center; gap:9px; font-family:'Fraunces',serif; font-weight:600; font-size:20px; color:var(--navy);}
+  .wordmark .dot{width:9px; height:9px; border-radius:50%; background:var(--teal);}
+  main{ flex:1; display:flex; align-items:center; justify-content:center; padding:32px 20px; }
+  .card{ background:white; border:1px solid var(--line); border-radius:14px; padding:32px; width:100%; max-width:420px; }
+  .tabs{ display:flex; background:var(--paper-dim); border:1px solid var(--line); border-radius:999px; padding:4px; gap:2px; margin-bottom:24px; }
+  .tabs button{ flex:1; border:none; background:transparent; padding:10px; border-radius:999px; font-family:'Inter',sans-serif; font-size:13.5px; font-weight:600; color:var(--ink-soft); cursor:pointer; }
+  .tabs button.active{ background:var(--navy); color:white; }
+  .form-label{ display:block; font-size:12.5px; font-weight:600; color:var(--navy); margin-bottom:14px; }
+  .form-label input, .form-label select{
+    display:block; width:100%; margin-top:6px; font-family:'Inter',sans-serif; font-size:14px;
+    padding:10px 12px; border:1px solid var(--line); border-radius:8px; color:var(--ink); background:white;
+  }
+  .form-label input:focus-visible, .form-label select:focus-visible{ outline:2px solid var(--teal); outline-offset:1px; }
+  .btn{
+    font-family:'Inter',sans-serif; font-weight:600; font-size:14.5px; padding:13px 24px; border-radius:8px;
+    border:1px solid transparent; cursor:pointer; width:100%;
+  }
+  .btn-primary{ background:var(--navy); color:white; }
+  .btn-primary:hover{ background:var(--navy-soft); }
+  .btn-primary:disabled{ opacity:.6; cursor:default; }
+  .hidden{ display:none !important; }
+  .error{ background:#FBEAE9; color:var(--danger); border:1px solid #F1C6C2; padding:10px 12px; border-radius:8px; font-size:13px; margin-bottom:16px; }
+  .success{ background:#EAF6F4; color:var(--teal-deep); border:1px solid #CDE9E4; padding:10px 12px; border-radius:8px; font-size:13px; margin-bottom:16px; }
+  .role-note{ font-size:12.5px; color:var(--ink-soft); margin:-6px 0 16px 0; line-height:1.5; }
+  .back-link{ font-size:13px; margin-top:18px; display:block; text-align:center; }
+</style>
+</head>
+<body>
+<header>
+  <a href="index.html" style="text-decoration:none;">
+    <div class="wordmark"><span class="dot"></span> ImpactSetu</div>
+  </a>
+</header>
+
+<main>
+  <div class="card">
+    <div class="tabs" role="tablist">
+      <button id="tab-login" class="active" onclick="switchTab('login')" type="button">Log in</button>
+      <button id="tab-register" onclick="switchTab('register')" type="button">Register</button>
+    </div>
+
+    <div id="global-error" class="error hidden"></div>
+    <div id="global-success" class="success hidden"></div>
+
+    <!-- LOG IN -->
+    <form id="login-form">
+      <label class="form-label">Email
+        <input type="email" id="login-email" required placeholder="you@example.com">
+      </label>
+      <label class="form-label">Password
+        <input type="password" id="login-password" required placeholder="••••••••">
+      </label>
+      <button type="submit" class="btn btn-primary" id="login-submit">Log in</button>
+    </form>
+
+    <!-- REGISTER -->
+    <form id="register-form" class="hidden">
+      <label class="form-label">I am a
+        <select id="reg-role" required onchange="onRoleChange()">
+          <option value="">Select one…</option>
+          <option value="donor">Donor / CSR head / HNI</option>
+          <option value="ngo">NGO representative</option>
+          <option value="csr">CSR company (managing a company profile)</option>
+        </select>
+      </label>
+      <p class="role-note" id="role-note"></p>
+
+      <label class="form-label">Full name
+        <input type="text" id="reg-name" required placeholder="Your name">
+      </label>
+      <label class="form-label">Organisation
+        <input type="text" id="reg-org" required placeholder="Organisation name">
+      </label>
+      <label class="form-label">State
+        <input type="text" id="reg-state" placeholder="e.g. Telangana">
+      </label>
+      <label class="form-label">City / District
+        <input type="text" id="reg-city" placeholder="e.g. Hyderabad">
+      </label>
+      <label class="form-label">Email
+        <input type="email" id="reg-email" required placeholder="you@example.com">
+      </label>
+      <label class="form-label">Password
+        <input type="password" id="reg-password" required minlength="6" placeholder="At least 6 characters">
+      </label>
+
+      <div id="ngo-fields" class="hidden">
+        <label class="form-label">CSR-1 Registration Number
+          <input type="text" id="reg-csr1" placeholder="e.g. CSR00012345">
+        </label>
+        <label class="form-label">12A / 80G Status
+          <select id="reg-12a80g">
+            <option value="">Select one…</option>
+            <option value="Both registered">Both 12A and 80G registered</option>
+            <option value="12A only">Only 12A registered</option>
+            <option value="Pending">Application pending</option>
+            <option value="Not registered">Not yet registered</option>
+          </select>
+        </label>
+        <label class="form-label">FCRA Status (if applicable)
+          <select id="reg-fcra">
+            <option value="">Select one…</option>
+            <option value="Registered">Registered</option>
+            <option value="Not applicable">Not applicable, no foreign funding</option>
+            <option value="Pending">Application pending</option>
+          </select>
+        </label>
+      </div>
+
+      <button type="submit" class="btn btn-primary" id="register-submit">Create account</button>
+    </form>
+
+    <a href="index.html" class="back-link">← Back to ImpactSetu</a>
+  </div>
+</main>
+
+<script type="module">
+  import { registerUser, loginUser } from "./js/auth.js";
+
+  window.switchTab = function(tab){
+    document.getElementById('tab-login').classList.toggle('active', tab==='login');
+    document.getElementById('tab-register').classList.toggle('active', tab==='register');
+    document.getElementById('login-form').classList.toggle('hidden', tab!=='login');
+    document.getElementById('register-form').classList.toggle('hidden', tab!=='register');
+    clearMessages();
+  };
+
+  window.onRoleChange = function(){
+    const role = document.getElementById('reg-role').value;
+    document.getElementById('ngo-fields').classList.toggle('hidden', role !== 'ngo');
+    const note = document.getElementById('role-note');
+    const notes = {
+      donor: "You'll be able to browse the CSR & NGO database and see your matched NGOs right away.",
+      ngo: "Your profile stays pending until we manually verify your registration details, same as the existing early-access flow.",
+      csr: "You'll get a company dashboard and appear in the CSR Partner Database once an admin marks your entry verified.",
+    };
+    note.textContent = notes[role] || "";
+  };
+
+  function clearMessages(){
+    document.getElementById('global-error').classList.add('hidden');
+    document.getElementById('global-success').classList.add('hidden');
+  }
+  function showError(msg){
+    const el = document.getElementById('global-error');
+    el.textContent = msg; el.classList.remove('hidden');
+  }
+  function showSuccess(msg){
+    const el = document.getElementById('global-success');
+    el.textContent = msg; el.classList.remove('hidden');
+  }
+
+  document.getElementById('login-form').addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    clearMessages();
+    const btn = document.getElementById('login-submit');
+    btn.disabled = true; btn.textContent = "Logging in…";
+    try{
+      const { profile } = await loginUser(
+        document.getElementById('login-email').value,
+        document.getElementById('login-password').value
+      );
+      window.location.href = 'index.html';
+    }catch(err){
+      showError(friendlyAuthError(err));
+    }finally{
+      btn.disabled = false; btn.textContent = "Log in";
+    }
+  });
+
+  document.getElementById('register-form').addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    clearMessages();
+    const role = document.getElementById('reg-role').value;
+    if(!role){ showError("Please choose what kind of account this is."); return; }
+    const btn = document.getElementById('register-submit');
+    btn.disabled = true; btn.textContent = "Creating account…";
+    try{
+      const extra = role === 'ngo' ? {
+        csr1Number: document.getElementById('reg-csr1').value,
+        registration12a80g: document.getElementById('reg-12a80g').value,
+        fcraStatus: document.getElementById('reg-fcra').value,
+      } : {};
+      const { profile } = await registerUser({
+        email: document.getElementById('reg-email').value,
+        password: document.getElementById('reg-password').value,
+        role,
+        name: document.getElementById('reg-name').value,
+        org: document.getElementById('reg-org').value,
+        state: document.getElementById('reg-state').value,
+        city: document.getElementById('reg-city').value,
+        extra,
+      });
+      showSuccess("Account created. Redirecting…");
+      setTimeout(()=>{ window.location.href = 'index.html'; }, 700);
+    }catch(err){
+      showError(friendlyAuthError(err));
+    }finally{
+      btn.disabled = false; btn.textContent = "Create account";
+    }
+  });
+
+  // If arriving via ?role=ngo (or donor/csr) from index.html, jump straight
+  // into the register tab with that role preselected.
+  const presetRole = new URLSearchParams(window.location.search).get('role');
+  if(presetRole && ['donor','ngo','csr'].includes(presetRole)){
+    switchTab('register');
+    document.getElementById('reg-role').value = presetRole;
+    onRoleChange();
+  }
+
+  function friendlyAuthError(err){
+    const code = err?.code || "";
+    if(code.includes("email-already-in-use")) return "That email already has an account — try logging in instead.";
+    if(code.includes("invalid-credential") || code.includes("wrong-password") || code.includes("user-not-found")) return "Email or password didn't match. Try again.";
+    if(code.includes("weak-password")) return "Password should be at least 6 characters.";
+    if(code.includes("invalid-email")) return "That doesn't look like a valid email.";
+    return "Something went wrong: " + (err?.message || "please try again.");
+  }
+</script>
+<script src="js/seva.js" defer></script>
+</body>
+</html>

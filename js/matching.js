@@ -82,6 +82,7 @@ export function computeAllMatches(ngoDirectory, csrCompanies, gaps = [], minScor
         amount: csr.grantRange || "Amount on request",
         fit: score,
         matchedNgo: ngo.org,
+        email: csr.email || "",
       });
     }
   }

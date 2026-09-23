@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dashboard — ImpactSetu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#161F38; --navy-soft:#212B4A; --teal:#0F9C8A; --teal-deep:#0B7A6D;
+    --gold:#E8A33D; --paper:#F6F4EE; --paper-dim:#EDEAE1; --ink:#1B2230;
+    --ink-soft:#57607A; --line:#DAD5C7; --white:#FFFFFF;
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:'Inter',sans-serif; font-size:16px; line-height:1.5; }
+  h1,h2,h3{ font-family:'Fraunces',serif; font-weight:600; letter-spacing:-0.01em; margin:0; }
+  .wrap{ max-width:1000px; margin:0 auto; padding:0 28px; }
+  header{ padding:18px 0; border-bottom:1px solid var(--line); background:white; }
+  .nav{ display:flex; align-items:center; justify-content:space-between; }
+  .wordmark{display:flex; align-items:center; gap:9px; font-family:'Fraunces',serif; font-weight:600; font-size:20px; color:var(--navy); text-decoration:none;}
+  .wordmark .dot{width:9px; height:9px; border-radius:50%; background:var(--teal);}
+  #auth-logout-btn{ background:none; border:1px solid var(--line); border-radius:8px; padding:8px 16px; font-family:'Inter',sans-serif; font-weight:600; font-size:13px; cursor:pointer; color:var(--ink);}
+  .hidden{ display:none !important; }
+  main{ padding:40px 0 60px; }
+  .status-chip{ display:inline-block; font-size:12px; font-weight:700; padding:4px 12px; border-radius:999px; margin-top:8px; }
+  .status-active{ background:#EAF6F4; color:var(--teal-deep); }
+  .status-pending{ background:#FCF2E0; color:#B87B1E; }
+  .grid-3{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:24px; }
+  @media (max-width:820px){ .grid-3{ grid-template-columns:1fr; } }
+  .match-card{ background:white; border:1px solid var(--line); border-radius:10px; padding:18px 20px; }
+  .match-card .org{ font-family:'Fraunces',serif; font-size:16px; color:var(--navy); margin-bottom:8px; }
+  .chip{ display:inline-block; background:var(--paper-dim); color:var(--ink-soft); font-size:12px; padding:4px 10px; border-radius:999px; margin:0 6px 6px 0; }
+  .fit-bar{ height:6px; background:var(--paper-dim); border-radius:4px; overflow:hidden; margin-top:10px; }
+  .fit-fill{ height:100%; background:var(--teal); }
+  .fit-label{ font-size:12px; color:var(--ink-soft); margin-top:6px; }
+  .empty-note{ color:var(--ink-soft); font-size:13.5px; margin-top:16px; }
+  section{ margin-top:44px; }
+  .request-row{ background:white; border:1px solid var(--line); border-radius:10px; padding:14px 18px; margin-bottom:10px; }
+  .request-row .target{ font-family:'Fraunces',serif; font-size:15px; color:var(--navy); }
+  .request-row .msg{ font-size:13.5px; color:var(--ink-soft); margin-top:4px; }
+  .req-status{ display:inline-block; font-size:11px; font-weight:700; padding:3px 10px; border-radius:999px; margin-left:8px; vertical-align:middle; }
+  .req-pending{ background:#FCF2E0; color:#B87B1E; }
+  .req-accepted{ background:#EAF6F4; color:var(--teal-deep); }
+  .req-declined{ background:#FBEAE9; color:#B3261E; }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap nav">
+    <a href="index.html" class="wordmark"><span class="dot"></span> ImpactSetu</a>
+    <div id="auth-logged-in">
+      <button id="auth-logout-btn">Log out</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="profile-head">
+    <h1 id="greeting">Loading your dashboard…</h1>
+    <span class="status-chip" id="status-chip"></span>
+    <p style="margin-top:10px;"><a href="index.html">← Browse the full site</a></p>
+  </div>
+
+  <section id="ngo-section" class="hidden">
+    <h2>CSR &amp; donor teams that fit your cause</h2>
+    <p class="empty-note">Ranked by cause overlap, district overlap, and how much real documented need (NFHS-5) exists where you work.</p>
+    <div class="grid-3" id="ngo-matches"></div>
+  </section>
+
+  <section id="csr-section" class="hidden">
+    <h2>NGOs matched to your funding focus</h2>
+    <p class="empty-note">Add your focus areas and operating states in Firestore (<code>csr_companies</code>) to see ranked matches here.</p>
+    <div class="grid-3" id="csr-matches"></div>
+  </section>
+
+  <section id="donor-section" class="hidden">
+    <h2>Where to go next</h2>
+    <p class="empty-note">Browse the live need-gap map, the verified NGO directory, and the CSR partner database from the main site.</p>
+    <p><a href="index.html#panel-section">Go to the need-gap map →</a></p>
+  </section>
+
+  <section id="requests-section">
+    <h2>Your connection requests</h2>
+    <p class="empty-note">Every introduction you've requested, and its status. We review these and make the real email connection.</p>
+    <div id="requests-list"></div>
+  </section>
+</main>
+
+<script type="module">
+  import { requireAuth, wireAuthHeader } from "./js/auth.js";
+  import { getTopMatchesForNgo, getTopMatchesForCsr } from "./js/matching.js";
+  import { getMyConnectionRequests } from "./js/connect.js";
+
+  wireAuthHeader({ loggedOutEl: "auth-logged-in", loggedInEl: "auth-logged-in" }); // logout button always visible here since this page requires auth anyway
+
+  requireAuth().then(async ({ profile }) => {
+    document.getElementById('greeting').textContent = `Welcome, ${profile.name}`;
+    const statusChip = document.getElementById('status-chip');
+    if(profile.status === 'pending_verification'){
+      statusChip.textContent = "Pending verification";
+      statusChip.className = "status-chip status-pending";
+    } else {
+      statusChip.textContent = "Active";
+      statusChip.className = "status-chip status-active";
+    }
+
+    if(profile.role === 'ngo'){
+      document.getElementById('ngo-section').classList.remove('hidden');
+      const [gapsRes, csrRes] = await Promise.all([
+        fetch('data/districts.json').then(r=>r.json()).catch(()=>({districts:[]})),
+        import('./js/csr-database.js').then(m => m.loadCsrCompanies()).catch(()=>[]),
+      ]);
+      const ngoAsSelf = { org: profile.org, cause: profile.cause || '', region: profile.city, state: profile.state };
+      const results = getTopMatchesForNgo(ngoAsSelf, csrRes, gapsRes.districts || []);
+      renderMatchCards('ngo-matches', results.map(r => ({
+        org: r.csr.name, type: r.csr.type, cause: (r.reasons[0] || r.csr.focusAreas?.[0] || '—'),
+        region: (r.csr.districts||[])[0] || r.csr.state, amount: r.csr.grantRange, fit: r.score,
+      })), "No matches yet — this fills in once CSR companies with overlapping focus areas are added to the database.");
+    } else if(profile.role === 'csr'){
+      document.getElementById('csr-section').classList.remove('hidden');
+      const [ngosRes, gapsRes] = await Promise.all([
+        fetch('data/ngos.json').then(r=>r.json()).catch(()=>({ngos:[]})),
+        fetch('data/districts.json').then(r=>r.json()).catch(()=>({districts:[]})),
+      ]);
+      const csrAsSelf = { name: profile.org, type:'CSR', focusAreas: profile.focusAreas || [], state: profile.state, districts: profile.districts || [] };
+      const results = getTopMatchesForCsr(csrAsSelf, ngosRes.ngos || [], gapsRes.districts || []);
+      renderMatchCards('csr-matches', results.map(r => ({
+        org: r.ngo.org, type:'NGO', cause: r.ngo.cause, region: `${r.ngo.region}, ${r.ngo.state}`,
+        amount: r.ngo.desc, fit: r.score,
+      })), "No matches yet — add focus areas and districts to your CSR profile document in Firestore to see NGOs here.");
+    } else {
+      document.getElementById('donor-section').classList.remove('hidden');
+    }
+
+    loadMyRequests();
+  });
+
+  async function loadMyRequests(){
+    const listEl = document.getElementById('requests-list');
+    try{
+      const requests = await getMyConnectionRequests();
+      if(requests.length === 0){
+        listEl.innerHTML = `<p class="empty-note">No requests sent yet — hit "Connect" on any matched CSR partner or NGO to reach out.</p>`;
+        return;
+      }
+      listEl.innerHTML = requests.map(r => `
+        <div class="request-row">
+          <div class="target">${r.targetName} <span class="req-status req-${r.status}">${r.status}</span></div>
+          <div class="msg">${r.message || ''}${r.amountRange ? ' · ' + r.amountRange : ''}</div>
+        </div>
+      `).join('');
+    } catch(err){
+      console.error('Failed to load connection requests:', err);
+      listEl.innerHTML = `<p class="empty-note" style="color:#B3261E;">Couldn't load your requests: ${err.message || err}</p>`;
+    }
+  }
+
+  function renderMatchCards(containerId, items, emptyMsg){
+    const grid = document.getElementById(containerId);
+    if(items.length === 0){
+      grid.innerHTML = `<p class="empty-note">${emptyMsg}</p>`;
+      return;
+    }
+    grid.innerHTML = items.map(m => `
+      <div class="match-card">
+        <div class="org">${m.org}</div>
+        <div>
+          <span class="chip">${m.type}</span>
+          <span class="chip">${m.cause}</span>
+          <span class="chip">${m.region}</span>
+        </div>
+        <div class="fit-bar"><div class="fit-fill" style="width:${m.fit}%"></div></div>
+        <div class="fit-label">${m.fit}% fit${m.amount ? ' · ' + m.amount : ''}</div>
+      </div>
+    `).join('');
+  }
+</script>
+<script src="js/seva.js" defer></script>
+</body>
+</html>

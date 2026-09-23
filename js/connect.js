@@ -26,6 +26,7 @@ export async function sendConnectionRequest(p) {
     fromName: user.displayName || user.email,
     targetType: p.targetType,
     targetName: p.targetName,
+    targetEmail: p.targetEmail || "",
     message: p.message || "",
     amountRange: p.amountRange || "",
     status: "pending",
@@ -46,7 +47,7 @@ export async function getMyConnectionRequests() {
 
 // --- Shared modal wiring, used by index.html ---------------------------
 
-let pendingTarget = null; // { targetType, targetName }
+let pendingTarget = null; // { targetType, targetName, targetEmail }
 
 function ensureModal() {
   if (document.getElementById("connect-overlay")) return;
@@ -69,8 +70,9 @@ function ensureModal() {
         </form>
         <div id="connect-modal-success" class="hidden">
           <h3>Request sent</h3>
-          <p class="modal-sub">We've logged your introduction request. Our team reviews these and makes the actual email connection — check your dashboard for status.</p>
-          <button class="btn btn-ghost" style="width:100%; margin-top:12px;" onclick="window.ImpactSetuConnect.closeModal()">Close</button>
+          <p class="modal-sub" id="connect-success-sub">We've logged your introduction request. Our team reviews these and makes the actual email connection — check your dashboard for status.</p>
+          <a id="connect-mailto-btn" class="btn btn-primary hidden" style="display:block; text-align:center; text-decoration:none; margin-bottom:10px;" target="_blank" rel="noopener">Open email draft</a>
+          <button class="btn btn-ghost" style="width:100%;" onclick="window.ImpactSetuConnect.closeModal()">Close</button>
         </div>
       </div>
     </div>`;
@@ -87,11 +89,32 @@ function ensureModal() {
       await sendConnectionRequest({
         targetType: pendingTarget.targetType,
         targetName: pendingTarget.targetName,
+        targetEmail: pendingTarget.targetEmail,
         message: document.getElementById("connect-message").value,
         amountRange: document.getElementById("connect-amount").value,
       });
       document.getElementById("connect-form").classList.add("hidden");
       document.getElementById("connect-modal-success").classList.remove("hidden");
+
+      const mailtoBtn = document.getElementById("connect-mailto-btn");
+      const successSub = document.getElementById("connect-success-sub");
+      if (pendingTarget.targetEmail) {
+        const user = auth.currentUser;
+        const subject = `Introduction via ImpactSetu — ${user?.displayName || user?.email || "a potential partner"}`;
+        const amount = document.getElementById("connect-amount").value;
+        const body =
+          `Hi ${pendingTarget.targetName},\n\n` +
+          document.getElementById("connect-message").value +
+          (amount ? `\n\nProposed funding range: ${amount}` : "") +
+          `\n\n— Sent via ImpactSetu (${user?.email || ""})`;
+        mailtoBtn.href = `mailto:${pendingTarget.targetEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        mailtoBtn.textContent = `Email ${pendingTarget.targetName} now`;
+        mailtoBtn.classList.remove("hidden");
+        successSub.textContent = "We've logged your request, and drafted the actual email for you below — this opens your own mail app so you send it yourself.";
+      } else {
+        mailtoBtn.classList.add("hidden");
+        successSub.textContent = "We've logged your introduction request. This organisation doesn't have a direct email on file yet, so our team will make the introduction manually — check your dashboard for status.";
+      }
     } catch (err) {
       errEl.textContent = err.message || "Something went wrong sending that request.";
       errEl.classList.remove("hidden");
@@ -105,9 +128,9 @@ function ensureModal() {
   });
 }
 
-function openModal(targetType, targetName) {
+function openModal(targetType, targetName, targetEmail) {
   ensureModal();
-  pendingTarget = { targetType, targetName };
+  pendingTarget = { targetType, targetName, targetEmail: targetEmail || "" };
   document.getElementById("connect-modal-title").textContent = `Connect with ${targetName}`;
   document.getElementById("connect-modal-sub").textContent =
     targetType === "ngo"
@@ -116,6 +139,7 @@ function openModal(targetType, targetName) {
   document.getElementById("connect-form").classList.remove("hidden");
   document.getElementById("connect-modal-success").classList.add("hidden");
   document.getElementById("connect-modal-error").classList.add("hidden");
+  document.getElementById("connect-mailto-btn").classList.add("hidden");
   document.getElementById("connect-form").reset();
   document.getElementById("connect-overlay").classList.add("open");
   document.body.style.overflow = "hidden";
