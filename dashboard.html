@@ -91,6 +91,7 @@
   import { requireAuth, wireAuthHeader } from "./js/auth.js";
   import { getTopMatchesForNgo, getTopMatchesForCsr } from "./js/matching.js";
   import { getMyConnectionRequests } from "./js/connect.js";
+  import { loadNgoDirectory } from "./js/ngo-database.js";
 
   wireAuthHeader({ loggedOutEl: "auth-logged-in", loggedInEl: "auth-logged-in" }); // logout button always visible here since this page requires auth anyway
 
@@ -119,12 +120,12 @@
       })), "No matches yet — this fills in once CSR companies with overlapping focus areas are added to the database.");
     } else if(profile.role === 'csr'){
       document.getElementById('csr-section').classList.remove('hidden');
-      const [ngosRes, gapsRes] = await Promise.all([
-        fetch('data/ngos.json').then(r=>r.json()).catch(()=>({ngos:[]})),
+      const [ngoList, gapsRes] = await Promise.all([
+        loadNgoDirectory().catch(()=>[]),
         fetch('data/districts.json').then(r=>r.json()).catch(()=>({districts:[]})),
       ]);
       const csrAsSelf = { name: profile.org, type:'CSR', focusAreas: profile.focusAreas || [], state: profile.state, districts: profile.districts || [] };
-      const results = getTopMatchesForCsr(csrAsSelf, ngosRes.ngos || [], gapsRes.districts || []);
+      const results = getTopMatchesForCsr(csrAsSelf, ngoList, gapsRes.districts || []);
       renderMatchCards('csr-matches', results.map(r => ({
         org: r.ngo.org, type:'NGO', cause: r.ngo.cause, region: `${r.ngo.region}, ${r.ngo.state}`,
         amount: r.ngo.desc, fit: r.score,
