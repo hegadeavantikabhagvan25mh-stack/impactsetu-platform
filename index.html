@@ -354,6 +354,7 @@
   import { wireAuthHeader } from "./js/auth.js";
   import { loadCsrCompanies, renderCsrDatabase, initCsrDatabaseUI, getCsrCompanies } from "./js/csr-database.js";
   import { computeAllMatches } from "./js/matching.js";
+  import { loadNgoDirectory } from "./js/ngo-database.js";
   import "./js/connect.js";
 
   wireAuthHeader();
@@ -364,6 +365,7 @@
   window.__initCsrDatabaseUI = initCsrDatabaseUI;
   window.__getCsrCompanies = getCsrCompanies;
   window.__computeAllMatches = computeAllMatches;
+  window.__loadNgoDirectory = loadNgoDirectory;
 </script>
 </head>
 <body data-mode="donor">
@@ -576,7 +578,7 @@
   // both data sources have loaded — see loadData() and computeMatches() below.
   let matches = [];
 
-  let ngoDirectory = []; // loaded from data/ngos.json at runtime
+  let ngoDirectory = []; // loaded from Firestore's `ngos` collection at runtime
 
   const NGO_DIR_PAGE_SIZE = 5;
   let ngoDirVisibleCount = NGO_DIR_PAGE_SIZE;
@@ -797,22 +799,31 @@
     const ngoGrid = document.getElementById('ngo-directory');
     if(pulseList) pulseList.innerHTML = '<div class="pulse-row"><p style="color:var(--ink-soft); font-size:13.5px; grid-column:1/-1;">Loading district data…</p></div>';
     if(ngoGrid) ngoGrid.innerHTML = '<p style="color:var(--ink-soft); font-size:13.5px;">Loading NGO directory…</p>';
+
+    // Districts stay a static file — this data never changes at runtime.
+    let districtsData;
     try{
-      const [districtsRes, ngosRes] = await Promise.all([
-        fetch('data/districts.json'),
-        fetch('data/ngos.json'),
-      ]);
-      const districtsData = await districtsRes.json();
-      const ngosData = await ngosRes.json();
+      const districtsRes = await fetch('data/districts.json');
+      districtsData = await districtsRes.json();
       gaps = districtsData.districts;
-      ngoDirectory = ngosData.ngos;
-      renderDataProvenance(districtsData, ngosData);
     } catch(err){
-      console.error('Failed to load data files:', err);
+      console.error('Failed to load district data:', err);
       if(pulseList) pulseList.innerHTML = '<div class="pulse-row"><p style="color:var(--sev-high); font-size:13.5px; grid-column:1/-1;">Couldn\'t load district data. Check that data/districts.json is uploaded to the repo.</p></div>';
-      if(ngoGrid) ngoGrid.innerHTML = '<p style="color:var(--sev-high); font-size:13.5px;">Couldn\'t load NGO data. Check that data/ngos.json is uploaded to the repo.</p>';
       return;
     }
+
+    // NGOs now live in Firestore's `ngos` collection, managed the same way
+    // as CSR companies — its own try/catch so a Firestore hiccup here
+    // doesn't take down the district data above.
+    try{
+      ngoDirectory = await window.__loadNgoDirectory();
+    } catch(err){
+      console.error('NGO directory failed to load:', err);
+      if(ngoGrid) ngoGrid.innerHTML = `<p style="color:var(--sev-high); font-size:13.5px;">Couldn't load the NGO directory. Error: ${err.message || err}</p>`;
+      ngoDirectory = [];
+    }
+
+    renderDataProvenance(districtsData);
 
     // Live CSR partner database (Firestore) — its own try/catch so a
     // Firestore hiccup, or a later matching error, can never corrupt
@@ -850,7 +861,10 @@
     renderMatches();
   }
 
-  function renderDataProvenance(districtsData, ngosData){
+  const NGO_DATASET_NOTE = "All organizations below are real, active NGOs, identified through public information (web search). This is not the same as ImpactSetu doing its own 12A/80G/CSR-1 due-diligence verification. That verification layer is a planned platform feature, not something we've built yet. Jivika Foundation is included because the platform's builder has first-hand knowledge of it. The rest are included based on publicly available information about their real, ongoing work.";
+  const NGO_DATASET_RETRIEVED = "2026-09-02";
+
+  function renderDataProvenance(districtsData){
     const el = document.getElementById('provenance-content');
     if(!el) return;
     el.innerHTML = `
@@ -863,8 +877,8 @@
       </div>
       <div class="prov-card">
         <h4>NGO Directory</h4>
-        <p>${ngosData.note}</p>
-        <p><b>Retrieved:</b> ${ngosData.retrieved_date} &nbsp;·&nbsp; <b>Records:</b> ${ngosData.ngos.length} organisations</p>
+        <p>${NGO_DATASET_NOTE}</p>
+        <p><b>Retrieved:</b> ${NGO_DATASET_RETRIEVED} &nbsp;·&nbsp; <b>Records:</b> ${ngoDirectory.length} organisations</p>
       </div>
     `;
   }
