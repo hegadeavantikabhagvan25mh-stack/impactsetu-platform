@@ -359,6 +359,20 @@
 
   wireAuthHeader();
 
+  // Delegated click handler for every "Connect" button, present or future
+  // (pagination/filtering re-renders cards constantly). Reading from
+  // data-* attributes instead of building an inline onclick string avoids
+  // the HTML-attribute quoting bug entirely — no org/email name, however
+  // it's punctuated, can ever break this.
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.connect-btn');
+    if (!btn) return;
+    const name = btn.dataset.targetName || "";
+    const email = btn.dataset.targetEmail || "";
+    const type = btn.dataset.targetType || "ngo";
+    window.ImpactSetuConnect.openModal(type, name, email);
+  });
+
   // Exposed so the plain <script> below (loadData, renderMatches) can use them.
   window.__loadCsrCompanies = loadCsrCompanies;
   window.__renderCsrDatabase = renderCsrDatabase;
@@ -616,7 +630,7 @@
         <div class="tag-row"><span class="chip">${n.cause || "—"}</span><span class="chip">${n.region || "—"}, ${n.state || "—"}</span></div>
         <div class="amount">${n.desc || ""}</div>
         ${districtStat}
-        <button class="btn btn-ghost" style="margin-top:auto;" onclick="window.ImpactSetuConnect.openModal('ngo', ${JSON.stringify(n.org || "")}, ${JSON.stringify(n.email || '')})">Connect</button>
+        <button class="btn btn-ghost connect-btn" style="margin-top:auto;" data-target-type="ngo" data-target-name="${(n.org||"").replace(/"/g,'&quot;')}" data-target-email="${(n.email||"").replace(/"/g,'&quot;')}">Connect</button>
       `;
       grid.appendChild(card);
     });
@@ -739,7 +753,7 @@
           <div class="fit-bar"><div class="fit-fill" style="width:${m.fit}%"></div></div>
           <div class="fit-label" style="margin-top:6px;">${m.fit}% match to your profile</div>
         </div>
-        <button class="btn btn-ghost" style="margin-top:auto;" onclick="window.ImpactSetuConnect.openModal('csr', ${JSON.stringify(m.org)}, ${JSON.stringify(m.email || '')})">Connect</button>
+        <button class="btn btn-ghost connect-btn" style="margin-top:auto;" data-target-type="csr" data-target-name="${(m.org||"").replace(/"/g,'&quot;')}" data-target-email="${(m.email||"").replace(/"/g,'&quot;')}">Connect</button>
       `;
       grid.appendChild(card);
     });
